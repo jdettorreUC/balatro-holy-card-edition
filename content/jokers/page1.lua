@@ -1,7 +1,7 @@
 --Page 1 Jokers Atlas
 SMODS.Atlas{
-    key = 'TBOJ_Jokers',
-    path = 'TBOJ_jokers.png',
+    key = 'HCE_Jokers',
+    path = 'HCE_jokers.png',
     px = 71,
     py = 95
 }
@@ -11,7 +11,7 @@ SMODS.Atlas{
 SMODS.Joker{
 
     key = 'sad_onion',
-    atlas = 'TBOJ_Jokers',
+    atlas = 'HCE_Jokers',
     pos = {x= 0, y = 0},
 
 
@@ -49,7 +49,7 @@ SMODS.Joker{
 SMODS.Joker{
 
     key = 'the_inner_eye',
-    atlas = 'TBOJ_Jokers',
+    atlas = 'HCE_Jokers',
     pos = {x= 1, y = 0},
 
 
@@ -96,7 +96,7 @@ SMODS.Joker{
 --[[
 SMODS.Joker {
     key = 'my_reflection',
-    atlas = 'TBOJ_Jokers',
+    atlas = 'HCE_Jokers',
     pos = {x = 4, y = 0},
 
     rarity = 1,
@@ -272,7 +272,7 @@ SMODS.Joker {
 
 SMODS.Joker {
     key = 'the_mark',
-    atlas = 'TBOJ_Jokers',
+    atlas = 'HCE_Jokers',
     pos = {x = 15, y = 3},
 
     rarity = 1,
@@ -317,7 +317,7 @@ SMODS.Joker {
 
 SMODS.Joker {
     key = 'we_need_to_go_deeper',
-    atlas = 'TBOJ_Jokers',
+    atlas = 'HCE_Jokers',
     pos = {x = 0, y = 4},
 
     rarity = 1,
@@ -373,7 +373,7 @@ SMODS.Joker {
 
 SMODS.Joker {
     key = 'the_small_rock',
-    atlas = 'TBOJ_Jokers',
+    atlas = 'HCE_Jokers',
     pos = {x = 6, y = 4},
 
     rarity = 1,
@@ -411,7 +411,7 @@ SMODS.Joker {
 
 SMODS.Joker {
     key = 'spelunker_hat',
-    atlas = 'TBOJ_Jokers',
+    atlas = 'HCE_Jokers',
     pos = {x = 7, y = 4},
 
     rarity = 1,

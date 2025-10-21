@@ -1,14 +1,14 @@
 {
-	"id": "binding_of_jimbo",
-	"name": "The Binding of Jimbo",
-	"display_name": "TheBindingOfJimbo",
+	"id": "holy_card_edition",
+	"name": "Holy Card Edition",
+	"display_name": "Holy Card",
 	"author": ["jdettorreUC"],
 	"description": "A Balatro mod with elements from The Binding of Isaac.",
-	"prefix": "tboj",
+	"prefix": "hce",
 	"main_file": "main.lua",
 	"priority": 0,
-	"badge_colour": "dbd5ce",
-	"badge_text_colour": "000000",
+	"badge_colour": "00C9B8", 
+	"badge_text_colour": "FFFFFF",
 	"version": "0.0.1",
 	"dependencies": ["Steamodded (>>1.0.0~ALPHA-0711a)"]
 }

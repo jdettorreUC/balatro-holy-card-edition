@@ -1,6 +1,6 @@
 SMODS.Atlas{
-    key = 'TBOJ_enhancements',
-    path = 'TBOJ_enhancements.png',
+    key = 'HCE_enhancements',
+    path = 'HCE_enhancements.png',
     px = 71,
     py = 95
 }
@@ -8,7 +8,7 @@ SMODS.Atlas{
 --Infested (for fly/spider related items) - Scores +1 mult and +2 chips for each infested card in the deck
 SMODS.Enhancement {
     key = 'infested',
-    atlas = 'TBOJ_enhancements',
+    atlas = 'HCE_enhancements',
     pos = {x = 0, y = 1},
 
     config = {extra = {mult = 1, chips = 2} },
@@ -16,7 +16,7 @@ SMODS.Enhancement {
         local infested_tally = 0
         if G.playing_cards then
             for _, playing_card in ipairs(G.playing_cards) do
-                if SMODS.has_enhancement(playing_card, 'm_tboj_infested') then infested_tally = infested_tally + 1 end
+                if SMODS.has_enhancement(playing_card, 'm_hce_infested') then infested_tally = infested_tally + 1 end
             end
         end
         return { vars = { card.ability.extra.mult * infested_tally, card.ability.extra.chips * infested_tally} }
@@ -36,7 +36,7 @@ SMODS.Enhancement {
             local infested_tally = 0
             if G.playing_cards then
                 for _, playing_card in ipairs(G.playing_cards) do
-                    if SMODS.has_enhancement(playing_card, 'm_tboj_infested') then infested_tally = infested_tally + 1 end
+                    if SMODS.has_enhancement(playing_card, 'm_hce_infested') then infested_tally = infested_tally + 1 end
                 end
             end
             return {mult = card.ability.extra.mult * infested_tally, chips = card.ability.extra.chips * infested_tally}
@@ -47,12 +47,12 @@ SMODS.Enhancement {
 --Soiled (for poop related items) - 1 in 2 chance to earn $2 when discarded
 SMODS.Enhancement {
     key = 'soiled',
-    atlas = 'TBOJ_enhancements',
+    atlas = 'HCE_enhancements',
     pos = {x = 2, y = 1},
 
     config = {extra = { discard_dollars = 3, odds = 2} },
     loc_vars = function(self, info_queue, card)
-        local numerator, denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'tboj_soiled')
+        local numerator, denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'hce_soiled')
         return { vars = { card.ability.extra.discard_dollars, numerator, denominator } }
     end,
 
@@ -66,7 +66,7 @@ SMODS.Enhancement {
 
     calculate = function(self, card, context)
         if context.discard and context.other_card == card then
-            if SMODS.pseudorandom_probability(card, 'tboj_soiled', 1, card.ability.extra.odds) then
+            if SMODS.pseudorandom_probability(card, 'hce_soiled', 1, card.ability.extra.odds) then
                 return {dollars = card.ability.extra.discard_dollars}
             end
         end
@@ -76,7 +76,7 @@ SMODS.Enhancement {
 --Charged (for battery related items) - Card increases rank after scoring, permanently gains x0.25 mult when “fully charged” (Ace into 2)
 SMODS.Enhancement {
     key = 'charged',
-    atlas = 'TBOJ_enhancements',
+    atlas = 'HCE_enhancements',
     pos = {x = 1, y = 1},
 
     config = {extra = { charge_rate = 1} },
@@ -107,7 +107,7 @@ SMODS.Enhancement {
 --Explosive (for bomb related items) - Destroy self when scored, permanently adds its chips to adjacent scoring cards
 SMODS.Enhancement {
     key = 'explosive',
-    atlas = 'TBOJ_enhancements',
+    atlas = 'HCE_enhancements',
     pos = {x = 2, y = 0},
 
     config = { extra = {donated_chips = 0}},
@@ -175,13 +175,13 @@ SMODS.Enhancement {
 --Bone - x1.25 chips, 1/6 chance this card gets destroyed
 SMODS.Enhancement {
     key = 'bone',
-    atlas = 'TBOJ_enhancements',
+    atlas = 'HCE_enhancements',
     pos = {x = 1, y = 0},
 
     config = {x_chips = 1.25, extra = { odds = 6} },
     shatters = true,
     loc_vars = function(self, info_queue, card)
-        local numerator, denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'tboj_bone')
+        local numerator, denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'hce_bone')
         return { vars = { card.ability.x_chips, numerator, denominator } }
     end,
 
@@ -196,7 +196,7 @@ SMODS.Enhancement {
 
     calculate = function(self, card, context)
         if context.destroy_card and context.cardarea == G.play and context.destroy_card == card and
-            SMODS.pseudorandom_probability(card, 'tboj_bone', 1, card.ability.extra.odds) then
+            SMODS.pseudorandom_probability(card, 'hce_bone', 1, card.ability.extra.odds) then
             return { remove = true }
         end
     end,
@@ -205,7 +205,7 @@ SMODS.Enhancement {
 --Bloodied - Gains x0.5 mult per card destroyed this ante, resets after Boss Blind
 SMODS.Enhancement {
     key = 'bloodied',
-    atlas = 'TBOJ_enhancements',
+    atlas = 'HCE_enhancements',
     pos = {x = 0, y = 0},
 
     config = {extra = {xmult = 1}},
