@@ -5,6 +5,8 @@ SMODS.current_mod.optional_features = {
     }
 }
 
+SMODS.Sound:register_global()
+
 assert(SMODS.load_file('hooks_and_helpers.lua'))()
 assert(SMODS.load_file('content/enhancements.lua'))()
 assert(SMODS.load_file('content/jokers/page1.lua'))()

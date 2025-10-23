@@ -93,7 +93,6 @@ SMODS.Joker{
 
 --ID 005 (My Reflection)
 
---[[
 SMODS.Joker {
     key = 'my_reflection',
     atlas = 'HCE_Jokers',
@@ -104,7 +103,7 @@ SMODS.Joker {
     unlocked = true,
     blueprint_compat = true,
 
-    config = {extra = { Xmult = 3 } },
+    config = {extra = { xmult = 3 } },
 
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.xmult } }
@@ -113,14 +112,37 @@ SMODS.Joker {
     loc_txt = {
         name = 'My Reflection',
         text = {
-            [1] = '{C:mult}x#1#{} mult if played hand is {C:attention}symmetrical',
-            [2] = '{C:inactive}(Non-Stone enhancements excluded)'
+            [1] = '{X:mult,C:white}x#1#{} Mult if scoring hand has',
+            [2] = '{C:attention}symmetrical{} ranks',
         }
     },
 
+    calculate = function(self, card, context)
+        if context.joker_main then
+            if #context.scoring_hand == 1 then
+                return {xmult = card.ability.extra.xmult}
+            elseif #context.scoring_hand == 2 then
+                if context.scoring_hand[1]:get_id() == context.scoring_hand[2]:get_id() then
+                    return {xmult = card.ability.extra.xmult}
+                end
+            elseif #context.scoring_hand == 3 then
+                if context.scoring_hand[1]:get_id() == context.scoring_hand[3]:get_id() then
+                    return {xmult = card.ability.extra.xmult}
+                end
+            elseif #context.scoring_hand == 4 then
+                if context.scoring_hand[1]:get_id() == context.scoring_hand[4]:get_id() and context.scoring_hand[2]:get_id() == context.scoring_hand[3]:get_id() then
+                    return {xmult = card.ability.extra.xmult}
+                end
+            else
+                if context.scoring_hand[1]:get_id() == context.scoring_hand[5]:get_id() and context.scoring_hand[2]:get_id() == context.scoring_hand[4]:get_id() then
+                    return {xmult = card.ability.extra.xmult}
+                end
+            end
+        end
+    end
     
 }
-    ]]
+
 
 --ID 006 (Number One)
 
@@ -149,6 +171,45 @@ SMODS.Joker {
 --ID 018 (A Dollar)
 
 --ID 019 (BOOM!)
+
+--[[
+SMODS.Joker{
+
+    key = 'boom',
+    atlas = 'HCE_Jokers',
+    pos = {x= 0, y = 0},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 50 } },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips } }
+    end,
+
+    loc_txt = {
+        name = 'Boom!',
+        text = {
+            [1] = 'When obtained, adds 10 random',
+            [2] = 'Explosive Cards to deck'
+        }
+    },
+
+
+    calculate = function(self, card, context)  
+        if context.joker_main then
+            return {
+                chips = card.ability.extra.chips
+            }
+        end
+    end
+}
+]]
 
 --ID 020 (Transcendence)
 
@@ -449,6 +510,63 @@ SMODS.Joker {
 --ID 093 (The Gamekid)
 
 --ID 094 (Sack of Pennies)
+
+SMODS.Joker{
+
+    key = 'sack_of_pennies',
+    atlas = 'HCE_Jokers',
+    pos = {x= 10, y = 4},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { dollars = 1, nickel_odds = 3, dime_odds = 8} },
+
+    loc_vars = function(self, info_queue, card)
+        local n_numerator, n_denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.nickel_odds, 'hce_sack_of_pennies')
+        local d_numerator, d_denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.dime_odds, 'hce_sack_of_pennies')
+        return { vars = { card.ability.extra.dollars, n_numerator, n_denominator, d_numerator, d_denominator} }
+    end,
+
+    loc_txt = {
+        name = 'Sack of Pennies',
+        text = {
+            [1] = 'Earn {C:money}$1{} at end of round',
+            [2] = '{C:green}#2# in #3#{} chance for {C:money}$5{} instead',
+            [3] = '{C:green}#4# in #5#{} chance for {C:money}$10{} instead',
+        }
+    },
+
+    calculate = function(self, card, context)
+        if context.end_of_round and context.game_over == false and context.main_eval then
+            if SMODS.pseudorandom_probability(card, 'hce_sack_of_pennies', 1, card.ability.extra.dime_odds) then
+                card.ability.extra.dollars = 10
+                return {
+                    message = 'Dime!',
+                    colour = G.C.MONEY,
+                    sound = 'hce_dime'
+                }
+            elseif SMODS.pseudorandom_probability(card, 'hce_sack_of_pennies', 1, card.ability.extra.nickel_odds) then
+                card.ability.extra.dollars = 5
+                return {
+                    message = 'Nickel!',
+                    colour = G.C.MONEY,
+                    sound = 'hce_nickel'
+                }
+            else
+                card.ability.extra.dollars = 1
+            end
+        end
+    end,
+
+    calc_dollar_bonus = function(self, card)
+        return card.ability.extra.dollars
+    end
+}
 
 --ID 095 (Robo-Baby)
 
