@@ -791,7 +791,6 @@ SMODS.Consumable {
         end
     end,
 
-    -- this needs cleaned up later, i'm just being lazy right now
     use = function(self, card, area, copier)
         local enhancement_to_consumable = {
             ["m_mult"] = "c_empress",

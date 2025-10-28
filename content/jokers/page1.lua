@@ -376,49 +376,49 @@ SMODS.Joker {
 
 --ID 084 (We Need to go Deeper!)
 
-SMODS.Joker {
-    key = 'we_need_to_go_deeper',
-    atlas = 'HCE_Jokers',
-    pos = {x = 0, y = 4},
+-- SMODS.Joker {
+--     key = 'we_need_to_go_deeper',
+--     atlas = 'HCE_Jokers',
+--     pos = {x = 0, y = 4},
 
-    rarity = 1,
-    cost = 4,
-    unlocked = true,
-    blueprint_compat = true,
+--     rarity = 1,
+--     cost = 4,
+--     unlocked = true,
+--     blueprint_compat = true,
 
-    config = {extra = { chips = 0} },
+--     config = {extra = { chips = 0} },
 
-    loc_vars = function(self, info_queue, card)
-        return { vars = { card.ability.extra.chips, card.ability.extra.mult } }
-    end,
+--     loc_vars = function(self, info_queue, card)
+--         return { vars = { card.ability.extra.chips, card.ability.extra.mult } }
+--     end,
 
-    loc_txt = {
-        name = 'We Need To Go Deeper!',
-        text = {
-            [1] = 'Played {C:attention}Spades{} score {C:chips}+10{} Chips',
-            [2] = 'per {C:attention}Spade{} scored this round',
-            [3] = '{C:inactive}(Currently{} {C:chips}+#1#{} {C:inactive}Chips)'
-        }
-    },
+--     loc_txt = {
+--         name = 'We Need To Go Deeper!',
+--         text = {
+--             [1] = 'Played {C:attention}Spades{} score {C:chips}+10{} Chips',
+--             [2] = 'per {C:attention}Spade{} scored this round',
+--             [3] = '{C:inactive}(Currently{} {C:chips}+#1#{} {C:inactive}Chips)'
+--         }
+--     },
 
-        calculate = function(self, card, context)
+--         calculate = function(self, card, context)
 
-            if context.individual and context.cardarea == G.play and context.other_card:is_suit("Spades") then
-                card.ability.extra.chips = card.ability.extra.chips + 10
-                return {
-                    chips = card.ability.extra.chips,
-                    card = card
-                }
-            end
+--             if context.individual and context.cardarea == G.play and context.other_card:is_suit("Spades") then
+--                 card.ability.extra.chips = card.ability.extra.chips + 10
+--                 return {
+--                     chips = card.ability.extra.chips,
+--                     card = card
+--                 }
+--             end
 
-            if context.end_of_round and not context.individual then
-                card.ability.extra.chips = 0
-                return {
-                    message = "Reset",
-                }
-            end
-        end
-}
+--             if context.end_of_round and not context.individual then
+--                 card.ability.extra.chips = 0
+--                 return {
+--                     message = "Reset",
+--                 }
+--             end
+--         end
+-- }
 
 --ID 085 (Deck of Cards)
 
@@ -589,6 +589,35 @@ SMODS.Joker{
 --ID 104 (The Parasite)
 
 --ID 105 (The D6)
+
+-- SMODS.Joker{
+
+--     key = 'the_d6',
+--     atlas = 'HCE_Jokers',
+--     pos = {x= 1, y = 5},
+
+
+--     rarity = 1,
+--     cost = 4,
+--     unlocked = true,
+--     blueprint_compat = false,
+--     activated = true,
+
+--     loc_txt = {
+--         name = 'The D6',
+--         text = {
+--             'I AM TEST',
+--         }
+--     },
+
+--     can_use = function(self, card)
+--         return true
+--     end,
+
+--     use = function(self, card, area, copier)
+--         return true
+--     end
+-- }
 
 --ID 106 (Mr. Mega)
 
