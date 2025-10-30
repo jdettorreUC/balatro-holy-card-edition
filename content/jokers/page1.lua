@@ -150,6 +150,44 @@ SMODS.Joker {
 
 --ID 008 (Brother Bobby)
 
+SMODS.Joker{
+
+    key = 'brother_bobby',
+    atlas = 'HCE_Jokers',
+    pos = {x= 7, y = 0},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 2 } },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips} }
+    end,
+
+    loc_txt = {
+        name = 'Brother Bobby',
+        text = {
+            [1] = 'Played cards score {C:chips}+#1#{} Chips',
+            [2] = 'per remaining {C:attention}hand{}',
+        }
+    },
+
+
+    calculate = function(self, card, context)  
+        if context.individual and context.cardarea == G.play then
+            return {
+                chips = card.ability.extra.chips * G.GAME.current_round.hands_left,
+                card = card
+            }
+        end
+    end
+}
+
 --ID 009 (Skatole)
 
 --ID 010 (Halo of Flies)
@@ -307,6 +345,44 @@ SMODS.Joker{
 
 --ID 067 (Sister Maggy)
 
+SMODS.Joker{
+
+    key = 'sister_maggy',
+    atlas = 'HCE_Jokers',
+    pos = {x= 3, y = 3},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 2 } },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips} }
+    end,
+
+    loc_txt = {
+        name = 'Sister Maggy',
+        text = {
+            [1] = 'Played cards score {C:chips}+#1#{} Chips',
+            [2] = 'per remaining {C:attention}discard{}',
+        }
+    },
+
+
+    calculate = function(self, card, context)  
+        if context.individual and context.cardarea == G.play then
+            return {
+                chips = card.ability.extra.chips * G.GAME.current_round.discards_left,
+                card = card
+            }
+        end
+    end
+}
+
 --ID 068 (Technology)
 
 --ID 069 (Chocolate Milk)
@@ -341,7 +417,7 @@ SMODS.Joker {
     unlocked = true,
     blueprint_compat = true,
 
-    config = {extra = { chips = 6, mult = 6} },
+    config = {extra = { chips = 66, mult = 6} },
 
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.chips, card.ability.extra.mult } }
@@ -570,6 +646,64 @@ SMODS.Joker{
 
 --ID 095 (Robo-Baby)
 
+SMODS.Joker{
+
+    key = 'robo-baby',
+    atlas = 'HCE_Jokers',
+    pos = {x= 11, y = 4},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 2 } },
+
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue + 1] = G.P_CENTERS.m_steel
+
+        local steel_tally = 0
+        if G.playing_cards then
+            for _, playing_card in ipairs(G.playing_cards) do
+                if SMODS.has_enhancement(playing_card, 'm_steel') then steel_tally = steel_tally + 1 end
+            end
+        end
+
+        return { vars = { card.ability.extra.chips, card.ability.extra.chips * steel_tally } }
+    end,
+
+    loc_txt = {
+        name = 'Robo-Baby',
+        text = {
+            [1] = 'Played cards score {C:chips}+#1#{} Chips',
+            [2] = 'per {C:attention}Steel Card{} in full deck',
+            [3] = '{C:inactive}(Currently: {C:chips}+#2# {C:inactive}Chips)'
+        }
+    },
+
+
+    calculate = function(self, card, context)  
+        if context.cardarea == G.play then
+
+            local steel_tally = 0
+            if G.playing_cards then
+                for _, playing_card in ipairs(G.playing_cards) do
+                    if SMODS.has_enhancement(playing_card, 'm_steel') then steel_tally = steel_tally + 1 end
+                end
+            end
+
+            if context.individual then
+                return {
+                    chips = card.ability.extra.chips * steel_tally,
+                    card = card
+                }
+            end
+        end
+    end
+}
+
 --ID 096 (Little C.H.A.D.)
 
 --ID 097 (The Book of Sin)
@@ -579,6 +713,56 @@ SMODS.Joker{
 --ID 099 (Little Gish)
 
 --ID 100 (Little Steven)
+
+SMODS.Joker{
+
+    key = 'little_steven',
+    atlas = 'HCE_Jokers',
+    pos = {x= 16, y = 4},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 2, tarot_count = 0} },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips, card.ability.extra.tarot_count, card.ability.extra.chips * card.ability.extra.tarot_count} }
+    end,
+
+    loc_txt = {
+        name = 'Little Steven',
+        text = {
+            [1] = 'Played cards score {C:chips}+#1#{} Chips',
+            [2] = 'per {C:tarot}Tarot{} card used this ante',
+            [3] = '{C:inactive}(Currently: {C:chips}+#3# {C:inactive}Chips)'
+        }
+    },
+
+
+    calculate = function(self, card, context)
+        if context.using_consumeable and context.consumeable.ability.set == 'Tarot' then
+            card.ability.extra.tarot_count = card.ability.extra.tarot_count + 1
+        end
+
+        if context.individual and context.cardarea == G.play then
+            return {
+                chips = card.ability.extra.chips * card.ability.extra.tarot_count,
+                card = card
+            }
+        end
+
+        if context.ante_change and context.ante_end then
+            card.ability.extra.tarot_count = 0
+                return {
+                    message = "Reset",
+                }
+        end
+    end
+}
 
 --ID 101 (The Halo)
 
@@ -634,6 +818,63 @@ SMODS.Joker{
 --ID 112 (Guardian Angel)
 
 --ID 113 (Demon Baby)
+
+SMODS.Joker{
+
+    key = 'demon_baby',
+    atlas = 'HCE_Jokers',
+    pos = {x= 9, y = 5},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 2, destroyed_count = 0 } },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips, card.ability.extra.destroyed_count, card.ability.extra.chips * card.ability.extra.destroyed_count} }
+    end,
+
+    loc_txt = {
+        name = 'Demon Baby',
+        text = {
+            [1] = 'Played cards score {C:chips}+#1#{} Chips',
+            [2] = 'per card {C:attention}destroyed{} this ante',
+            [3] = '{C:inactive}(Currently: {C:chips}+#3# {C:inactive}Chips)'
+        }
+    },
+
+
+    calculate = function(self, card, context)
+
+        if context.remove_playing_cards and not context.selling_card then
+            local local_destroyed_count = 0
+            for i, destroyed_card in ipairs(context.removed) do
+                if (destroyed_card.ability.set ~= "Joker") then
+                    local_destroyed_count = local_destroyed_count + 1
+                end
+            end
+            card.ability.extra.destroyed_count = card.ability.extra.destroyed_count + local_destroyed_count
+        end
+
+        if context.individual and context.cardarea == G.play then
+            return {
+                chips = card.ability.extra.chips * card.ability.extra.destroyed_count,
+                card = card
+            }
+        end
+
+        if context.ante_change and context.ante_end then
+            card.ability.extra.destroyed_count = 0
+                return {
+                    message = "Reset",
+                }
+        end
+    end
+}
 
 --ID 114 (Mom's Knife)
 

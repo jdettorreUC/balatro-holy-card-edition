@@ -217,9 +217,8 @@ SMODS.Enhancement {
         name = 'Bloodied Card',
         text = {
             [1] = 'Gains {X:mult,C:white}X0.5{} Mult per card',
-            [2] = '{C:attention}destroyed{} this ante, resets',
-            [3] = 'when {C:attention}Boss Blind{} is defeated',
-            [4] = '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult)'
+            [2] = '{C:attention}destroyed{} this ante',
+            [3] = '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult)'
         }
     },
 
@@ -234,7 +233,7 @@ SMODS.Enhancement {
             card.ability.extra.xmult = card.ability.extra.xmult + (0.5 * destroyed_count)
         end
 
-        if context.end_of_round and context.game_over == false and context.beat_boss then
+        if context.ante_change and context.ante_end then
             card.ability.extra.xmult = 1
         end
 
@@ -244,4 +243,4 @@ SMODS.Enhancement {
     end,
 }
 
---Haunted - +1 Hand Size, x0.95 mult when held in hand
+--Holy - +1 Hand Size

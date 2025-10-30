@@ -86,6 +86,49 @@ SMODS.Atlas{
 
 --ID 163 (Ghost Baby)
 
+SMODS.Joker{
+
+    key = 'ghost_baby',
+    atlas = 'HCE_Jokers2',
+    pos = {x = 19, y = 1},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 2, spectral_count = 0 } },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips, card.ability.extra.spectral_count, card.ability.extra.chips * card.ability.extra.spectral_count} }
+    end,
+
+    loc_txt = {
+        name = 'Ghost Baby',
+        text = {
+            [1] = 'Played cards score {C:chips}+#1#{} Chips',
+            [2] = 'per {C:spectral}Spectral{} card used this run',
+            [3] = '{C:inactive}(Currently: {C:chips}+#3# {C:inactive}Chips)'
+        }
+    },
+
+
+    calculate = function(self, card, context)
+        if context.using_consumeable and context.consumeable.ability.set == 'Spectral' then
+            card.ability.extra.spectral_count = card.ability.extra.spectral_count + 1
+        end
+
+        if context.individual and context.cardarea == G.play then
+            return {
+                chips = card.ability.extra.chips * card.ability.extra.spectral_count,
+                card = card
+            }
+        end
+    end
+}
+
 --ID 164 (The Candle)
 
 --ID 165 (Cat-O-Nine-Tails)
@@ -93,6 +136,49 @@ SMODS.Atlas{
 --ID 166 (D20)
 
 --ID 167 (Harlequin Baby)
+
+SMODS.Joker{
+
+    key = 'harlequin_baby',
+    atlas = 'HCE_Jokers2',
+    pos = {x = 3, y = 2},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 2 } },
+
+    loc_vars = function(self, info_queue, card)
+        local joker_count = 0
+        if G.jokers then
+            joker_count = #G.jokers.cards
+        end
+        return { vars = { card.ability.extra.chips, card.ability.extra.chips * joker_count} }
+    end,
+
+    loc_txt = {
+        name = 'Harlequin Baby',
+        text = {
+            [1] = 'Played cards score {C:chips}+#1#{} Chips',
+            [2] = 'per {C:attention}Joker{} owned',
+            [3] = '{C:inactive}(Currently: {C:chips}+#2# {C:inactive}Chips)'
+        }
+    },
+
+
+    calculate = function(self, card, context)  
+        if context.individual and context.cardarea == G.play then
+            return {
+                chips = card.ability.extra.chips * #G.jokers.cards,
+                card = card
+            }
+        end
+    end
+}
 
 --ID 168 (Epic Fetus)
 
@@ -107,6 +193,57 @@ SMODS.Atlas{
 --ID 173 (Mitre)
 
 --ID 174 (Rainbow Baby)
+
+SMODS.Joker{
+
+    key = 'rainbow_baby',
+    atlas = 'HCE_Jokers2',
+    pos = {x= 10, y = 2},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 2 } },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips} }
+    end,
+
+    loc_txt = {
+        name = 'Rainbow Baby',
+        text = {
+            [1] = 'Played cards score {C:chips}+#1#{} Chips',
+            [2] = 'per unique {C:attention}suit{} in scoring hand',
+        }
+    },
+
+
+    calculate = function(self, card, context)
+
+        if context.cardarea == G.play then
+            local suit_count = 0
+            for _, suit in pairs(SMODS.Suits) do
+                for _, playing_card in pairs(context.scoring_hand) do
+                    if playing_card:is_suit(suit.key) then
+                    suit_count = suit_count + 1
+                    break
+                    end
+                end
+            end
+
+            if context.individual then
+                return {
+                    chips = card.ability.extra.chips * suit_count,
+                    card = card
+                }
+            end
+        end
+    end
+}
 
 --ID 175 (Dad's Key)
 
