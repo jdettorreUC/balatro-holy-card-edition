@@ -28,6 +28,59 @@ SMODS.Atlas{
 
 --ID 134 (Guppy's Tail)
 
+SMODS.Joker{
+
+    key = 'guppys_tail',
+    atlas = 'HCE_Jokers2',
+    pos = {x= 10, y = 0},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { odds = 3, card_slots = 1, pack_slots = 1, restore_flag = false} },
+
+    loc_vars = function(self, info_queue, card)
+        local numerator, denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'hce_guppys_tail')
+        return { vars = { numerator, denominator, card.ability.extra.card_slots, card.ability.extra.pack_slots, card.ability.extra.restore_flag} }
+    end,
+
+    loc_txt = {
+        name = "Guppy's Tail",
+        text = {
+            [1] = 'When entering shop, {C:green}#1# in #2#{} chance',
+            [2] = 'for {C:attention}-#3#{} card slot in shop and',
+            [3] = '{C:attention}+#4#{} Booster Pack slot in shop',
+        }
+    },
+
+    remove_from_deck = function(self, card, from_debuff)
+        if card.ability.restore_flag then
+            change_shop_size(card.ability.extra.card_slots)
+            SMODS.change_booster_limit(-card.ability.extra.pack_slots)
+        end
+    end,
+
+    calculate = function(self, card, context)
+        if context.starting_shop and SMODS.pseudorandom_probability(card, 'hce_guppys_tail', 1, card.ability.extra.odds) then
+            change_shop_size(-card.ability.extra.card_slots)
+            SMODS.change_booster_limit(card.ability.extra.pack_slots)
+            card.ability.extra.restore_flag = true
+            card:juice_up()
+            play_sound('hce_thumbs_up')
+        end
+
+        if context.ending_shop and card.ability.extra.restore_flag then
+            change_shop_size(card.ability.extra.card_slots)
+            SMODS.change_booster_limit(-card.ability.extra.pack_slots)
+            card.ability.restore_flag = false
+        end
+    end
+}
+
 --ID 135 (IV Bag)
 
 --ID 136 (Best Friend)
@@ -56,6 +109,61 @@ SMODS.Atlas{
 
 --ID 148 (Infestation)
 
+SMODS.Joker{
+
+    key = 'infestation',
+    atlas = 'HCE_Jokers2',
+    pos = {x= 4, y = 1},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_hce_infested
+    end,
+
+    loc_txt = {
+        name = 'Infestation',
+        text = {
+            [1] = 'If scoring hand contains',
+            [2] = 'an {C:attention}Infested Card{} another random',
+            [3] = 'scoring card becomes {C:attention}Infested'
+        }
+    },
+
+
+    calculate = function(self, card, context)
+        if context.before then
+            local non_infesteds = {}
+
+            for _, v in pairs(context.scoring_hand) do
+                if not SMODS.has_enhancement(v, 'm_hce_infested') then
+                    non_infesteds[#non_infesteds + 1] = v
+                end
+            end
+
+            if #non_infesteds < #context.scoring_hand and #non_infesteds > 0 then --there was at least one infested card and at least one non-infested card
+                local new_infested = pseudorandom_element(non_infesteds, 'hce_infestation')
+                new_infested:set_ability('m_hce_infested')
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        new_infested:juice_up()
+                        return true
+                    end
+                }))
+
+                return {
+                    message = 'Infested!',
+                    sound = 'hce_thumbs_up'
+                }
+            end
+        end
+    end
+}
+
 --ID 149 (Ipecac)
 
 --ID 150 (Tough Love)
@@ -65,6 +173,54 @@ SMODS.Atlas{
 --ID 152 (Technology 2)
 
 --ID 153 (Mutant Spider)
+
+SMODS.Joker{
+
+    key = 'mutant_spider',
+    atlas = 'HCE_Jokers2',
+    pos = {x= 9, y = 1},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { mult = 0, chips = 0} },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.mult, card.ability.extra.chips } }
+    end,
+
+    loc_txt = {
+        name = 'Mutant Spider',
+        text = {
+            [1] = 'This Joker gains {C:mult}+8{} Mult and {C:chips}+8{} Chips if',
+            [2] = 'played hand is a {C:attention}Four of a Kind{}',
+            [3] = '{C:inactive}(Currently {C:mult}+#1#{} {C:inactive}Mult and {C:chips}+#2#{} {C:inactive}Chips)',
+        }
+    },
+
+
+    calculate = function(self, card, context)
+        if context.before and context.scoring_hand and context.scoring_name == "Four of a Kind" then
+            card.ability.extra.mult = card.ability.extra.mult + 8
+            card.ability.extra.chips = card.ability.extra.chips + 8
+            return {
+                message = 'Upgrade!',
+                sound = 'hce_thumbs_up'
+            }
+        end
+
+        if context.joker_main then
+            return {
+                mult = card.ability.extra.mult,
+                chips = card.ability.extra.chips
+            }
+        end
+    end
+}
 
 --ID 154 (Chemical Peel)
 
@@ -272,6 +428,57 @@ SMODS.Joker{
 --ID 187 (Guppy's Hairball)
 
 --ID 188 (Abel)
+
+SMODS.Joker{
+
+    key = 'abel',
+    atlas = 'HCE_Jokers2',
+    pos = {x= 4, y = 3},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 2, lucky_triggers = 0 } },
+
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue + 1] = G.P_CENTERS.m_lucky
+        return { vars = { card.ability.extra.chips, card.ability.extra.lucky_triggers, card.ability.extra.chips * card.ability.extra.lucky_triggers} }
+    end,
+
+    loc_txt = {
+        name = 'Abel',
+        text = {
+            [1] = 'Played cards score {C:chips}+#1#{} Chips',
+            [2] = 'per card {C:attention}Lucky Card{} triggered this ante',
+            [3] = '{C:inactive}(Currently: {C:chips}+#3# {C:inactive}Chips)'
+        }
+    },
+
+
+    calculate = function(self, card, context)
+        if context.individual and context.cardarea == G.play and context.other_card.lucky_trigger then
+            card.ability.extra.lucky_triggers = card.ability.extra.lucky_triggers + 1
+        end
+
+        if context.individual and context.cardarea == G.play then
+            return {
+                chips = card.ability.extra.chips * card.ability.extra.lucky_triggers,
+                card = card
+            }
+        end
+
+        if context.ante_change and context.ante_end then
+            card.ability.extra.lucky_triggers = 0
+                return {
+                    message = "Reset",
+                }
+        end
+    end
+}
 
 --ID 189 (SMB Super Fan)
 

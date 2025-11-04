@@ -78,7 +78,12 @@ SMODS.Joker{
     calculate = function(self, card, context)
         if context.before and context.scoring_hand and context.scoring_name == "Three of a Kind" then
             card.ability.extra.mult = card.ability.extra.mult + 6
+            return {
+                message = 'Upgrade!',
+                sound = 'hce_thumbs_up'
+            }
         end
+
         if context.joker_main then
             return {
                 mult = card.ability.extra.mult
@@ -210,12 +215,11 @@ SMODS.Joker{
 
 --ID 019 (BOOM!)
 
---[[
 SMODS.Joker{
 
     key = 'boom',
     atlas = 'HCE_Jokers',
-    pos = {x= 0, y = 0},
+    pos = {x= 18, y = 0},
 
 
     rarity = 1,
@@ -224,32 +228,100 @@ SMODS.Joker{
     blueprint_compat = true,
 
 
-    config = {extra = { chips = 50 } },
+    config = {extra = { bombs_added = 10 } },
 
     loc_vars = function(self, info_queue, card)
-        return { vars = { card.ability.extra.chips } }
+        info_queue[#info_queue+1] = G.P_CENTERS.m_hce_explosive
+        return { vars = { card.ability.extra.bombs_added } }
     end,
 
     loc_txt = {
         name = 'Boom!',
         text = {
-            [1] = 'When obtained, adds 10 random',
-            [2] = 'Explosive Cards to deck'
+            [1] = 'When blind is selected, add {C:attention}#1#',
+            [2] = 'random {C:attention}Explosive Cards{} to hand',
+            [3] = 'and {C:attention}destroy{} this joker'
         }
     },
 
+    add_to_deck = function(self, card, from_debuff)
+        local eval = function(card) return not card.REMOVED end
+        juice_card_until(card, eval, true)
+    end,
 
-    calculate = function(self, card, context)  
-        if context.joker_main then
+    calculate = function(self, card, context)
+        if context.first_hand_drawn then
+            for i = 1, card.ability.extra.bombs_added do
+                local rand_edition = poll_edition("hce_boom", 2, true)
+                local rand_seal = SMODS.poll_seal("hce_boom", 10)
+                local new_card = SMODS.add_card {
+                    set = "Playing Card",
+                    edition = rand_edition,
+                    seal = rand_seal,
+                    enhancement = 'm_hce_explosive'
+                }
+                new_card:add_to_deck()
+                G.deck.config.card_limit = G.deck.config.card_limit + 1
+            end
+
+            SMODS.destroy_cards(card, nil, nil, true)
             return {
-                chips = card.ability.extra.chips
+                message = 'BOOM!',
+                sound = 'hce_explosion'
             }
         end
     end
 }
-]]
+
 
 --ID 020 (Transcendence)
+
+SMODS.Joker{
+
+    key = 'transcendence',
+    atlas = 'HCE_Jokers',
+    pos = {x = 19, y = 0},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+    config = {extra = {discard_flag = false}},
+
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.c_hanged_man
+        return { vars = { card.ability.extra.discard_flag } }
+    end,
+
+    loc_txt = {
+        name = 'Transcendence',
+        text = {
+            [1] = 'Create a {C:tarot}Hanged Man{} card if',
+            [2] = 'no {C:attention}discards{} are used',
+            [3] = 'by the end of the round',
+            [4] = '{C:inactive}(Must have room)'
+        }
+    },
+
+
+    calculate = function(self, card, context)
+        --this is extremely scuffed, but honestly i spent way too much time on a joker with a simple effect and i wanna move on
+        if context.discard then
+            card.ability.extra.discard_flag = true
+        end
+
+        if context.setting_blind then
+            card.ability.extra.discard_flag = false
+        end
+
+        if context.end_of_round and context.cardarea == G.jokers and G.consumeables.config.card_limit - #G.consumeables.cards > 0 and not card.ability.extra.discard_flag then
+            SMODS.add_card{ key = "c_hanged_man" }
+        end
+    end
+}
+
 
 --ID 021 (The Compass)
 
@@ -522,7 +594,7 @@ SMODS.Joker {
     config = {extra = {mult = 4 } },
 
     loc_vars = function(self, info_queue, card)
-        --info_queue[#info_queue+1] = G.P_CENTERS.m_stone
+        info_queue[#info_queue+1] = G.P_CENTERS.m_stone
         return {vars = { card.ability.extra.mult }}
     end,
 
@@ -559,6 +631,7 @@ SMODS.Joker {
     config = {extra = { money = 3 } },
 
     loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_stone
         return { vars = { card.ability.extra.money } }
     end,
 
@@ -816,6 +889,44 @@ SMODS.Joker{
 --ID 111 (The Bean)
 
 --ID 112 (Guardian Angel)
+
+SMODS.Joker{
+
+    key = 'guardian_angel',
+    atlas = 'HCE_Jokers',
+    pos = {x= 8, y = 5},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 2 } },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips} }
+    end,
+
+    loc_txt = {
+        name = 'Guardian Angel',
+        text = {
+            [1] = 'Played cards score {C:chips}+#1#{} Chips',
+            [2] = 'per card {C:attention}held in hand',
+        }
+    },
+
+
+    calculate = function(self, card, context)  
+        if context.individual and context.cardarea == G.play then
+            return {
+                chips = card.ability.extra.chips * #G.hand.cards,
+                card = card
+            }
+        end
+    end
+}
 
 --ID 113 (Demon Baby)
 
