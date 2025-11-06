@@ -68,6 +68,11 @@ SMODS.Enhancement {
         if context.discard and context.other_card == card then
             if SMODS.pseudorandom_probability(card, 'hce_soiled', 1, card.ability.extra.odds) then
                 return {dollars = card.ability.extra.discard_dollars}
+            else
+                return {
+                    message = localize('k_nope_ex'),
+                    sound = 'hce_small_fart'
+                }
             end
         end
     end,
@@ -95,11 +100,36 @@ SMODS.Enhancement {
     },
 
     calculate = function(self, card, context)
-        if context.after and context.cardarea == G.play then
-            if card:get_id() + card.ability.extra.charge_rate > 14 then
-                card.ability.perma_x_mult = card.ability.perma_x_mult + 0.25
-            end
-            SMODS.modify_rank(card, card.ability.extra.charge_rate)
+        if context.final_scoring_step and context.cardarea == G.play then
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.15,
+                func = function()
+                    local charge_flag = false
+                    if card:get_id() + card.ability.extra.charge_rate > 14 then
+                        card.ability.perma_x_mult = card.ability.perma_x_mult + 0.25
+                        charge_flag = true
+                    end
+                    SMODS.modify_rank(card, card.ability.extra.charge_rate)
+                    card:juice_up()
+
+                    if charge_flag then
+                        attention_text({
+                            text = 'Charged!',
+                            scale = 1,
+                            hold = 1.4,
+                            major = card,
+                            align = 'bm',
+                            offset = { x = 0, y = 0 },
+                            silent = true
+                        })
+                        play_sound('hce_charge')
+                    else
+                        play_sound('hce_thumbs_up')
+                    end
+                    return true
+                end
+            }))
         end
     end,
 }
@@ -167,6 +197,14 @@ SMODS.Enhancement {
                 end
             end
 
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.15,
+                func = function()
+                    play_sound('hce_explosion')
+                    return true
+                end
+            }))
             SMODS.destroy_cards(card)
         end
     end,
@@ -195,9 +233,16 @@ SMODS.Enhancement {
     },
 
     calculate = function(self, card, context)
-        if context.destroy_card and context.cardarea == G.play and context.destroy_card == card and
-            SMODS.pseudorandom_probability(card, 'hce_bone', 1, card.ability.extra.odds) then
-            return { remove = true }
+        if context.destroy_card and context.cardarea == G.play and context.destroy_card == card and SMODS.pseudorandom_probability(card, 'hce_bone', 1, card.ability.extra.odds) then
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.15,
+                func = function()
+                    play_sound('hce_bone_break')
+                    return true
+                end
+            }))
+            return {remove = true }
         end
     end,
 }

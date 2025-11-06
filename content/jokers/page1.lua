@@ -213,7 +213,7 @@ SMODS.Joker{
 
 --ID 018 (A Dollar)
 
---ID 019 (BOOM!)
+--ID 019 (Boom!)
 
 SMODS.Joker{
 
@@ -354,6 +354,75 @@ SMODS.Joker{
 --ID 035 (The Necronomicon)
 
 --ID 036 (The Poop)
+
+SMODS.Joker{
+
+    key = 'the_poop',
+    atlas = 'HCE_Jokers',
+    pos = {x= 15, y = 1},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = false,
+
+    config = {extra = { activated = true, can_use = false} },
+
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.m_hce_soiled
+        return { vars = { card.ability.extra.activated, card.ability.extra.can_use, colours = {G.C.RED, G.C.FILTER}}}
+    end,
+
+    loc_txt = {
+        name = 'The Poop',
+        text = {
+            [1] = '{C:white,B:1}On Use:{} Creates a random {C:attention}Soiled Card{} in hand',
+            [2] = '{C:white,B:2}Recharge:{} At end of round'
+        }
+    },
+
+    add_to_deck = function(self, card, from_debuff)
+        card.ability.extra.can_use = true
+        local eval = function(card) return card.ability.extra.can_use end
+        juice_card_until(card, eval, true)
+    end,
+
+    calculate = function(self, card, context)
+        if context.hce_using_joker and context.hce_joker_used == card then
+            if #G.hand.cards < 1 then
+                return {
+                    message = localize('k_nope_ex'),
+                    sound = "hce_buzzer"
+                }
+            else
+                local rand_edition = poll_edition("hce_the_poop", 2, true)
+                local rand_seal = SMODS.poll_seal("hce_the_poop", 10)
+                local new_card = SMODS.add_card {
+                    set = "Playing Card",
+                    edition = rand_edition,
+                    seal = rand_seal,
+                    enhancement = 'm_hce_soiled'
+                }
+                new_card:add_to_deck()
+                G.deck.config.card_limit = G.deck.config.card_limit + 1
+                play_sound('hce_fart')
+
+                card.ability.extra.can_use = false
+            end
+        end
+
+        if context.end_of_round and context.cardarea == G.jokers then
+            card.ability.extra.can_use = true
+            local eval = function(card) return card.ability.extra.can_use end
+            juice_card_until(card, eval, true)
+            return {
+                message = "Charged!",
+                sound = "hce_charge"
+            }
+        end
+    end
+}
 
 --ID 037 (Mr. Boom)
 
@@ -847,34 +916,80 @@ SMODS.Joker{
 
 --ID 105 (The D6)
 
--- SMODS.Joker{
+SMODS.Joker{
 
---     key = 'the_d6',
---     atlas = 'HCE_Jokers',
---     pos = {x= 1, y = 5},
+    key = 'the_d6',
+    atlas = 'HCE_Jokers',
+    pos = {x= 1, y = 5},
 
 
---     rarity = 1,
---     cost = 4,
---     unlocked = true,
---     blueprint_compat = false,
---     activated = true,
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = false,
 
---     loc_txt = {
---         name = 'The D6',
---         text = {
---             'I AM TEST',
---         }
---     },
+    config = {extra = { activated = true, can_use = false} },
 
---     can_use = function(self, card)
---         return true
---     end,
+        loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.activated, card.ability.extra.can_use, colours = {G.C.RED, G.C.FILTER}}}
+    end,
 
---     use = function(self, card, area, copier)
---         return true
---     end
--- }
+    loc_txt = {
+        name = 'The D6',
+        text = {
+            [1] = '{C:white,B:1}On Use:{} Rerolls the {C:attention}leftmost{} joker',
+            [2] = '{s:0.9,C:inactive}(Cannot reroll self)',
+            [3] = '{C:white,B:2}Recharge:{} After clearing ante'
+        }
+    },
+
+    add_to_deck = function(self, card, from_debuff)
+        card.ability.extra.can_use = true
+        local eval = function(card) return card.ability.extra.can_use end
+        juice_card_until(card, eval, true)
+    end,
+
+    calculate = function(self, card, context)
+        if context.hce_using_joker and context.hce_joker_used == card then
+            if G.jokers.cards[1] == card then
+                return {
+                    message = localize('k_nope_ex'),
+                    sound = "hce_buzzer"
+                }
+            else
+                local rerolled_joker = G.jokers.cards[1]
+                local edition = rerolled_joker.edition
+                local apply_eternal = rerolled_joker.ability.eternal
+                local apply_rental = rerolled_joker.ability.rental
+                local apply_perishable = rerolled_joker.ability.perishable
+
+                SMODS.Stickers["eternal"]:apply(rerolled_joker, false)
+                SMODS.destroy_cards(rerolled_joker)
+                local new_joker = SMODS.add_card {
+                    set = "Joker",
+                    edition = edition,
+                }
+
+                SMODS.Stickers["eternal"]:apply(new_joker, apply_eternal)
+                SMODS.Stickers["rental"]:apply(new_joker, apply_rental)
+                SMODS.Stickers["perishable"]:apply(new_joker, apply_perishable)
+                play_sound('hce_dice_roll')
+
+                card.ability.extra.can_use = false
+            end
+        end
+
+        if context.ante_change and context.ante_end then
+            card.ability.extra.can_use = true
+            local eval = function(card) return card.ability.extra.can_use end
+            juice_card_until(card, eval, true)
+            return {
+                message = "Charged!",
+                sound = "hce_charge"
+            }
+        end
+    end
+}
 
 --ID 106 (Mr. Mega)
 

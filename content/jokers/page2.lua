@@ -291,6 +291,91 @@ SMODS.Joker{
 
 --ID 166 (D20)
 
+SMODS.Joker{
+
+    key = 'd20',
+    atlas = 'HCE_Jokers2',
+    pos = {x= 2, y = 2},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = false,
+
+    config = {extra = { activated = true, can_use = false} },
+
+        loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.activated, card.ability.extra.can_use, colours = {G.C.RED, G.C.FILTER}}}
+    end,
+
+    loc_txt = {
+        name = 'D20',
+        text = {
+            [1] = '{C:white,B:1}On Use:{} Rerolls all held {C:attention}consumables',
+            [2] = '{C:white,B:2}Recharge:{} After clearing ante'
+        }
+    },
+
+    add_to_deck = function(self, card, from_debuff)
+        card.ability.extra.can_use = true
+        local eval = function(card) return card.ability.extra.can_use end
+        juice_card_until(card, eval, true)
+    end,
+
+    calculate = function(self, card, context)
+        if context.hce_using_joker and context.hce_joker_used == card then
+            if #G.consumeables.cards == 0 then
+                return {
+                    message = localize('k_nope_ex'),
+                    sound = "hce_buzzer"
+                }
+            else
+                local edition_queue = {}
+
+                for i = 1, #G.consumeables.cards do
+                    if G.consumeables.cards[i].edition then
+                        edition_queue[#edition_queue+1] = G.consumeables.cards[i].edition.key
+                    else
+                        edition_queue[#edition_queue+1] = 0
+                    end
+                end
+
+                SMODS.destroy_cards(G.consumeables.cards)
+
+                while (#edition_queue > 0) do
+                    local random_pool = nil
+
+                    if SMODS.pseudorandom_probability(card, 'hce_d20', 7, 100) then --mimics Ghost Deck odds for spectrals (7%)
+                        random_pool = 'Spectral'
+                    elseif SMODS.pseudorandom_probability(card, 'hce_d20', 1, 2) then --50/50 for pill or tarot
+                        random_pool = 'Planet'
+                    else
+                        random_pool = 'Tarot'
+                    end
+
+                    SMODS.add_card{set = random_pool, edition = edition_queue[1]}
+                    table.remove(edition_queue, 1)
+                end
+
+                play_sound('hce_dice_roll')
+
+                card.ability.extra.can_use = false
+            end
+        end
+
+        if context.ante_change and context.ante_end then
+            card.ability.extra.can_use = true
+            local eval = function(card) return card.ability.extra.can_use end
+            juice_card_until(card, eval, true)
+            return {
+                message = "Charged!",
+                sound = "hce_charge"
+            }
+        end
+    end
+}
+
 --ID 167 (Harlequin Baby)
 
 SMODS.Joker{

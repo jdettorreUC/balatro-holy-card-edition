@@ -62,3 +62,85 @@ function SMODS.calculate_context(context, return_table)
     return ret
 
 end
+
+--use button on activated jokers
+local G_UIDEF_use_and_sell_buttons_ref = G.UIDEF.use_and_sell_buttons
+
+function G.UIDEF.use_and_sell_buttons(card)
+    local ret = G_UIDEF_use_and_sell_buttons_ref(card)  
+    if card.area and card.area == G.jokers and card.ability.extra and card.ability.extra.activated then --add bool to jokers if they are activated or not
+        local use = {
+            n = G.UIT.C,
+            config = { align = "cr" },
+            nodes = {
+                {
+                    n = G.UIT.C,
+                    config = {
+                        ref_table = card,
+                        align = "cr",
+                        minw = 1.25,
+                        minh = 1,
+                        padding = 0.1,
+                        r = 0.08,
+                        hover = true,
+                        shadow = true,
+                        colour = G.C.UI.BACKGROUND_INACTIVE,
+                        one_press = false,
+                        button = 'use_joker', --activates the function below
+                        func = "can_use_joker", --a bool attribute of the extra ability table
+                    },
+                    nodes = {
+                        { n = G.UIT.B, config = { w = 0.1, h = 0.3 } },
+                        {
+                            n = G.UIT.T,
+                            config = {
+                                text = localize('b_use'),
+                                colour = G.C.UI.TEXT_LIGHT,
+                                scale = 0.55,
+                                shadow = true,
+                            },
+                        }
+                    },
+                }
+            },
+        }
+        local n = ret.nodes[1]
+        if not card.added_to_deck then
+            use.nodes[1].nodes = { use.nodes[1].nodes[2] }
+        end
+        n.nodes = n.nodes or {}
+        table.insert(n.nodes, {
+            n = G.UIT.R,
+            config = { align = "cl" },
+            nodes = { use, }
+        })
+    end
+    return ret
+end
+
+--toggles the button depending on if you can use the joker or not
+  G.FUNCS.can_use_joker = function(e)
+    if e.config.ref_table.ability.extra.can_use then
+        e.config.colour = G.C.RED
+        e.config.button = 'use_joker'
+    else
+      e.config.colour = G.C.UI.BACKGROUND_INACTIVE
+      e.config.button = nil
+    end
+  end
+
+-- if context.hce_using_joker then
+-- {
+-- 	cardarea = G.jokers,
+-- 	hce_using_joker = true,
+-- 	hce_joker_used = card,
+-- 	area = G.jokers,
+-- }
+
+--new context for when the use button is pressed on an activated joker, shown above
+G.FUNCS.use_joker = function(e)
+    local card = e.config.ref_table
+    --print(card)
+    SMODS.calculate_context({hce_using_joker = true, hce_joker_used = card, area = card.from_area})
+    return true
+end
