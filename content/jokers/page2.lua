@@ -35,7 +35,7 @@ SMODS.Joker{
     pos = {x= 10, y = 0},
 
 
-    rarity = 1,
+    rarity = 2,
     cost = 4,
     unlocked = true,
     blueprint_compat = true,
@@ -181,7 +181,7 @@ SMODS.Joker{
     pos = {x= 9, y = 1},
 
 
-    rarity = 1,
+    rarity = 2,
     cost = 4,
     unlocked = true,
     blueprint_compat = true,
@@ -298,7 +298,7 @@ SMODS.Joker{
     pos = {x= 2, y = 2},
 
 
-    rarity = 1,
+    rarity = 2,
     cost = 4,
     unlocked = true,
     blueprint_compat = false,

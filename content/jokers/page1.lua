@@ -15,7 +15,7 @@ SMODS.Joker{
     pos = {x= 0, y = 0},
 
 
-    rarity = 1,
+    rarity = 2,
     cost = 4,
     unlocked = true,
     blueprint_compat = true,
@@ -53,7 +53,7 @@ SMODS.Joker{
     pos = {x= 1, y = 0},
 
 
-    rarity = 1,
+    rarity = 2,
     cost = 4,
     unlocked = true,
     blueprint_compat = true,
@@ -103,7 +103,7 @@ SMODS.Joker {
     atlas = 'HCE_Jokers',
     pos = {x = 4, y = 0},
 
-    rarity = 1,
+    rarity = 2,
     cost = 4,
     unlocked = true,
     blueprint_compat = true,
@@ -283,7 +283,7 @@ SMODS.Joker{
     pos = {x = 19, y = 0},
 
 
-    rarity = 1,
+    rarity = 2,
     cost = 4,
     unlocked = true,
     blueprint_compat = true,
@@ -553,7 +553,7 @@ SMODS.Joker {
     atlas = 'HCE_Jokers',
     pos = {x = 15, y = 3},
 
-    rarity = 1,
+    rarity = 2,
     cost = 4,
     unlocked = true,
     blueprint_compat = true,
@@ -654,7 +654,7 @@ SMODS.Joker {
     atlas = 'HCE_Jokers',
     pos = {x = 6, y = 4},
 
-    rarity = 1,
+    rarity = 2,
     cost = 4,
     unlocked = true,
     blueprint_compat = true,
@@ -692,7 +692,7 @@ SMODS.Joker {
     atlas = 'HCE_Jokers',
     pos = {x = 7, y = 4},
 
-    rarity = 1,
+    rarity = 2,
     cost = 4,
     unlocked = true,
     blueprint_compat = true,
@@ -863,7 +863,7 @@ SMODS.Joker{
     pos = {x= 16, y = 4},
 
 
-    rarity = 1,
+    rarity = 2,
     cost = 4,
     unlocked = true,
     blueprint_compat = true,
@@ -923,7 +923,7 @@ SMODS.Joker{
     pos = {x= 1, y = 5},
 
 
-    rarity = 1,
+    rarity = 3,
     cost = 4,
     unlocked = true,
     blueprint_compat = false,
