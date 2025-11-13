@@ -111,6 +111,150 @@ SMODS.Atlas{
 --ID 296 (Converter)
 
 --ID 297 (Pandora's Box)
+SMODS.Joker{
+
+    key = 'pandoras_box',
+    atlas = 'HCE_Jokers3',
+    pos = {x= 12, y = 2},
+
+
+    rarity = 2,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = false,
+
+    config = {extra = { activated = true, can_use = true, desc_key = "j_hce_pandoras_box"} },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.activated, card.ability.extra.can_use, colours = {G.C.RED, G.C.BLUE}}, key = card.ability.extra.desc_key}
+    end,
+
+    add_to_deck = function(self, card, from_debuff)
+        local desc_keys = {
+            [1] = "j_hce_pandoras_box_ante0",
+            [2] = "j_hce_pandoras_box_ante1",
+            [3] = "j_hce_pandoras_box_ante2",
+            [4] = "j_hce_pandoras_box_ante3",
+            [5] = "j_hce_pandoras_box_ante4",
+            [6] = "j_hce_pandoras_box_ante5",
+            [7] = "j_hce_pandoras_box_ante6",
+            [8] = "j_hce_pandoras_box_ante7",
+            [9] = "j_hce_pandoras_box_ante8",
+        }
+
+        if G.GAME.round_resets.blind_ante < 0 then
+            card.ability.extra.desc_key = desc_keys[1]
+        elseif G.GAME.round_resets.blind_ante < 8 then
+            card.ability.extra.desc_key = desc_keys[G.GAME.round_resets.blind_ante + 1]
+        else
+            card.ability.extra.desc_key = "j_hce_pandoras_box_endless"
+        end
+
+        local eval = function(card) return not card.REMOVED end
+        juice_card_until(card, eval, true)
+    end,
+
+    calculate = function(self, card, context)
+        if context.hce_using_joker and context.hce_joker_used == card then
+            if G.GAME.round_resets.blind_ante < 1 then
+                if G.consumeables.config.card_limit - #G.consumeables.cards > 0 then
+                    SMODS.add_card{ key = "c_soul" }
+                end
+            elseif G.GAME.round_resets.blind_ante == 1 then
+                if G.consumeables.config.card_limit - #G.consumeables.cards > 0 then
+                    SMODS.add_card{ set = "Spectral" }
+                end
+            elseif G.GAME.round_resets.blind_ante == 2 then
+                if G.consumeables.config.card_limit - #G.consumeables.cards > 0 then
+                    SMODS.add_card{ set = "Tarot" }
+                end
+                if G.consumeables.config.card_limit - #G.consumeables.cards > 0 then
+                    SMODS.add_card{ set = "Planet" }
+                end
+            elseif G.GAME.round_resets.blind_ante == 3 then
+                --this is >= because it accounts for the slot that will be freed when pandoras box is consumed
+                if G.jokers.config.card_limit - #G.jokers.cards >= 0 then
+                    local rand_edition = poll_edition("hce_pandoras_box", nil, false, true)
+                    SMODS.add_card {
+                        set = "Joker",
+                        edition = rand_edition,
+                        rarity = "Common"
+                    }
+                end
+            elseif G.GAME.round_resets.blind_ante == 4 then
+                if G.jokers.config.card_limit - #G.jokers.cards >= 0 then
+                    local rand_edition = poll_edition("hce_pandoras_box", nil, false, true)
+                    SMODS.add_card {
+                        set = "Joker",
+                        edition = rand_edition,
+                        rarity = "Common"
+                    }
+                end
+
+                if G.consumeables.config.card_limit - #G.consumeables.cards > 0 then
+                    SMODS.add_card{ set = "Spectral" }
+                end
+            elseif G.GAME.round_resets.blind_ante == 5 then
+                for i = 1, 2 do
+                    if G.consumeables.config.card_limit - #G.consumeables.cards > 0 then
+                        SMODS.add_card{ set = "Spectral" }
+                    end
+                end
+            elseif G.GAME.round_resets.blind_ante == 6 then
+                ease_dollars(20, true)
+            elseif G.GAME.round_resets.blind_ante == 7 then
+                for i = 1, 2 do
+                    if G.jokers.config.card_limit - #G.jokers.cards >= 0 then
+                        local rand_edition = poll_edition("hce_pandoras_box", nil, false, true)
+                        SMODS.add_card {
+                            set = "Joker",
+                            edition = rand_edition,
+                            rarity = "Common"
+                        }
+                    end
+                end
+            elseif G.GAME.round_resets.blind_ante == 8 then
+                --does nothing until I add The Bible
+            end
+
+            SMODS.destroy_cards(card, nil, nil, true)
+
+            if G.GAME.round_resets.blind_ante >= 9 then
+                return {
+                    message = localize('k_nope_ex'),
+                }
+            end
+        end
+
+        if context.ante_change then
+            --print("test")
+            local desc_keys = {
+                [1] = "j_hce_pandoras_box_ante0",
+                [2] = "j_hce_pandoras_box_ante1",
+                [3] = "j_hce_pandoras_box_ante2",
+                [4] = "j_hce_pandoras_box_ante3",
+                [5] = "j_hce_pandoras_box_ante4",
+                [6] = "j_hce_pandoras_box_ante5",
+                [7] = "j_hce_pandoras_box_ante6",
+                [8] = "j_hce_pandoras_box_ante7",
+                [9] = "j_hce_pandoras_box_ante8",
+            }
+
+        
+            if G.GAME.round_resets.blind_ante < 0 then
+                card.ability.extra.desc_key = desc_keys[1]
+            elseif G.GAME.round_resets.blind_ante < 8 then
+                card.ability.extra.desc_key = desc_keys[G.GAME.round_resets.blind_ante + 1 + context.ante_change]
+            else
+                card.ability.extra.desc_key = "j_hce_pandoras_box_endless"
+            end
+
+            return {
+                key = card.ability.extra.desc_key
+            }
+        end
+    end
+}
 
 --ID 298 (Unicorn Stump)
 

@@ -22,15 +22,6 @@ SMODS.Enhancement {
         return { vars = { card.ability.extra.mult * infested_tally, card.ability.extra.chips * infested_tally} }
     end,
 
-    loc_txt = {
-        name = 'Infested Card',
-        text = {
-            [1] = 'Scores {C:mult}+1{} Mult and {C:chips}+2{} Chips',
-            [2] = 'per {C:attention}Infested Card{} in deck',
-            [3] = '{C:inactive}(Currently {C:mult}+#1# {C:inactive}Mult and {C:chips}+#2# {C:inactive}Chips)',
-        }
-    },
-
     calculate = function(self, card, context)
         if context.main_scoring and context.cardarea == G.play then
             local infested_tally = 0
@@ -56,14 +47,6 @@ SMODS.Enhancement {
         return { vars = { card.ability.extra.discard_dollars, numerator, denominator } }
     end,
 
-    loc_txt = {
-        name = 'Soiled Card',
-        text = {
-            [1] = '{C:green}#2# in #3#{} chance to',
-            [2] = 'earn {C:money}$#1#{} when discarded',
-        }
-    },
-
     calculate = function(self, card, context)
         if context.discard and context.other_card == card then
             if SMODS.pseudorandom_probability(card, 'hce_soiled', 1, card.ability.extra.odds) then
@@ -88,16 +71,6 @@ SMODS.Enhancement {
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.charge_rate } }
     end,
-
-    loc_txt = {
-        name = 'Charged Card',
-        text = {
-            [1] = 'Increase rank by {C:attention}#1#{} after',
-            [2] = 'scoring, permanently gains',
-            [3] = '{X:mult,C:white}X0.25{} mult when rank resets',
-            [4] = '{C:inactive}({C:attention}Ace {C:inactive}into {C:attention}2{C:inactive})'
-        }
-    },
 
     calculate = function(self, card, context)
         if context.final_scoring_step and context.cardarea == G.play then
@@ -146,15 +119,6 @@ SMODS.Enhancement {
         card.ability.extra.donated_chips = 0
         return { vars = { card.ability.extra.donated_chips } }
     end,
-
-    loc_txt = {
-        name = 'Explosive Card',
-        text = {
-            [1] = '{C:attention}Explodes{} after scoring, permanently',
-            [2] = 'adding total chips to {C:attention}adjacent{}',
-            [3] = 'scoring cards in hand',
-        }
-    },
 
     calculate = function(self, card, context)
         if context.after and context.cardarea == G.play then
@@ -223,15 +187,6 @@ SMODS.Enhancement {
         return { vars = { card.ability.x_chips, numerator, denominator } }
     end,
 
-    loc_txt = {
-        name = 'Bone Card',
-        text = {
-            [1] = '{X:chips,C:white}X#1#{} Chips',
-            [2] = '{C:green}#2# in #3#{} chance to',
-            [3] = 'destroy card',
-        }
-    },
-
     calculate = function(self, card, context)
         if context.destroy_card and context.cardarea == G.play and context.destroy_card == card and SMODS.pseudorandom_probability(card, 'hce_bone', 1, card.ability.extra.odds) then
             G.E_MANAGER:add_event(Event({
@@ -257,15 +212,6 @@ SMODS.Enhancement {
     loc_vars = function(self, info_queue, card)
         return {vars = {card.ability.extra.xmult} }
     end,
-
-    loc_txt = {
-        name = 'Bloodied Card',
-        text = {
-            [1] = 'Gains {X:mult,C:white}X0.5{} Mult per card',
-            [2] = '{C:attention}destroyed{} this ante',
-            [3] = '{C:inactive}(Currently {X:mult,C:white}X#1#{} {C:inactive}Mult)'
-        }
-    },
 
     calculate = function(self, card, context)
         if context.remove_playing_cards and not context.selling_card then

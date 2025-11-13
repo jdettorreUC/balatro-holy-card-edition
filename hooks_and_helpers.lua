@@ -68,7 +68,7 @@ local G_UIDEF_use_and_sell_buttons_ref = G.UIDEF.use_and_sell_buttons
 
 function G.UIDEF.use_and_sell_buttons(card)
     local ret = G_UIDEF_use_and_sell_buttons_ref(card)  
-    if card.area and card.area == G.jokers and card.ability.extra and card.ability.extra.activated then --add bool to jokers if they are activated or not
+    if card.area and card.area == G.jokers and card.ability.extra and type(card.ability.extra) == "table" and card.ability.extra.activated then --add bool to jokers if they are activated or not
         local use = {
             n = G.UIT.C,
             config = { align = "cr" },

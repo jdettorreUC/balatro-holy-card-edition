@@ -27,14 +27,6 @@ SMODS.Joker{
         return { vars = { card.ability.extra.chips } }
     end,
 
-    loc_txt = {
-        name = 'Sad Onion',
-        text = {
-            '{C:chips}+#1#{} Chips',
-        }
-    },
-
-
     calculate = function(self, card, context)  
         if context.joker_main then
             return {
@@ -64,16 +56,6 @@ SMODS.Joker{
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult } }
     end,
-
-    loc_txt = {
-        name = 'The Inner Eye',
-        text = {
-            [1] = 'This Joker gains {C:mult}+6{} Mult if',
-            [2] = 'played hand is a {C:attention}Three of a Kind{}',
-            [3] = '{C:inactive}(Currently {C:mult}+#1#{} {C:inactive}Mult)',
-        }
-    },
-
 
     calculate = function(self, card, context)
         if context.before and context.scoring_hand and context.scoring_name == "Three of a Kind" then
@@ -113,14 +95,6 @@ SMODS.Joker {
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.xmult } }
     end,
-
-    loc_txt = {
-        name = 'My Reflection',
-        text = {
-            [1] = '{X:mult,C:white}x#1#{} Mult if scoring hand has',
-            [2] = '{C:attention}symmetrical{} ranks',
-        }
-    },
 
     calculate = function(self, card, context)
         if context.joker_main then
@@ -174,15 +148,6 @@ SMODS.Joker{
         return { vars = { card.ability.extra.chips} }
     end,
 
-    loc_txt = {
-        name = 'Brother Bobby',
-        text = {
-            [1] = 'Played cards score {C:chips}+#1#{} Chips',
-            [2] = 'per remaining {C:attention}hand{}',
-        }
-    },
-
-
     calculate = function(self, card, context)  
         if context.individual and context.cardarea == G.play then
             return {
@@ -235,15 +200,6 @@ SMODS.Joker{
         return { vars = { card.ability.extra.bombs_added } }
     end,
 
-    loc_txt = {
-        name = 'Boom!',
-        text = {
-            [1] = 'When blind is selected, add {C:attention}#1#',
-            [2] = 'random {C:attention}Explosive Cards{} to hand',
-            [3] = 'and {C:attention}destroy{} this joker'
-        }
-    },
-
     add_to_deck = function(self, card, from_debuff)
         local eval = function(card) return not card.REMOVED end
         juice_card_until(card, eval, true)
@@ -294,17 +250,6 @@ SMODS.Joker{
         info_queue[#info_queue+1] = G.P_CENTERS.c_hanged_man
         return { vars = { card.ability.extra.discard_flag } }
     end,
-
-    loc_txt = {
-        name = 'Transcendence',
-        text = {
-            [1] = 'Create a {C:tarot}Hanged Man{} card if',
-            [2] = 'no {C:attention}discards{} are used',
-            [3] = 'by the end of the round',
-            [4] = '{C:inactive}(Must have room)'
-        }
-    },
-
 
     calculate = function(self, card, context)
         --this is extremely scuffed, but honestly i spent way too much time on a joker with a simple effect and i wanna move on
@@ -373,14 +318,6 @@ SMODS.Joker{
         info_queue[#info_queue+1] = G.P_CENTERS.m_hce_soiled
         return { vars = { card.ability.extra.activated, card.ability.extra.can_use, colours = {G.C.RED, G.C.FILTER}}}
     end,
-
-    loc_txt = {
-        name = 'The Poop',
-        text = {
-            [1] = '{C:white,B:1}On Use:{} Creates a random {C:attention}Soiled Card{} in hand',
-            [2] = '{C:white,B:2}Recharge:{} At end of round'
-        }
-    },
 
     add_to_deck = function(self, card, from_debuff)
         card.ability.extra.can_use = true
@@ -505,15 +442,6 @@ SMODS.Joker{
         return { vars = { card.ability.extra.chips} }
     end,
 
-    loc_txt = {
-        name = 'Sister Maggy',
-        text = {
-            [1] = 'Played cards score {C:chips}+#1#{} Chips',
-            [2] = 'per remaining {C:attention}discard{}',
-        }
-    },
-
-
     calculate = function(self, card, context)  
         if context.individual and context.cardarea == G.play then
             return {
@@ -564,15 +492,7 @@ SMODS.Joker {
         return { vars = { card.ability.extra.chips, card.ability.extra.mult } }
     end,
 
-    loc_txt = {
-        name = 'The Mark',
-        text = {
-            [1] = 'Played {C:attention}6s{} score',
-            [2] = '{C:chips}+#1#{} Chips and {C:mult}+#2#{} Mult',
-        }
-    },
-
-        calculate = function(self, card, context)  
+    calculate = function(self, card, context)  
         if context.individual and context.cardarea == G.play and context.other_card:get_id() == 6 then
             return {
                 mult = card.ability.extra.mult,
@@ -667,14 +587,6 @@ SMODS.Joker {
         return {vars = { card.ability.extra.mult }}
     end,
 
-    loc_txt = {
-        name = 'The Small Rock',
-        text = {
-            [1] = 'Played {C:attention}Stone Cards{}',
-            [2] = 'give {C:mult}+#1#{} mult when scored',
-        }
-    },
-
     calculate = function(self, card, context)  
         if context.individual and context.cardarea == G.play and SMODS.has_enhancement(context.other_card, 'm_stone') then
             return {
@@ -704,15 +616,7 @@ SMODS.Joker {
         return { vars = { card.ability.extra.money } }
     end,
 
-    loc_txt = {
-        name = 'Spelunker Hat',
-        text = {
-            [1] = '{C:attention}Stone Cards{} held in hand',
-            [2] = 'earn {C:money}$#1#{} at end of round',
-        }
-    },
-
-        calculate = function(self, card, context)  
+    calculate = function(self, card, context)  
         if context.cardarea == G.hand and context.end_of_round and context.individual and SMODS.has_enhancement(context.other_card, 'm_stone') then
             --MUST use "dollars" not "money"
             return {
@@ -750,15 +654,6 @@ SMODS.Joker{
         return { vars = { card.ability.extra.dollars, n_numerator, n_denominator, d_numerator, d_denominator} }
     end,
 
-    loc_txt = {
-        name = 'Sack of Pennies',
-        text = {
-            [1] = 'Earn {C:money}$1{} at end of round',
-            [2] = '{C:green}#2# in #3#{} chance for {C:money}$5{} instead',
-            [3] = '{C:green}#4# in #5#{} chance for {C:money}$10{} instead',
-        }
-    },
-
     calculate = function(self, card, context)
         if context.end_of_round and context.game_over == false and context.main_eval then
             if SMODS.pseudorandom_probability(card, 'hce_sack_of_pennies', 1, card.ability.extra.dime_odds) then
@@ -790,7 +685,7 @@ SMODS.Joker{
 
 SMODS.Joker{
 
-    key = 'robo-baby',
+    key = 'robo_baby',
     atlas = 'HCE_Jokers',
     pos = {x= 11, y = 4},
 
@@ -815,16 +710,6 @@ SMODS.Joker{
 
         return { vars = { card.ability.extra.chips, card.ability.extra.chips * steel_tally } }
     end,
-
-    loc_txt = {
-        name = 'Robo-Baby',
-        text = {
-            [1] = 'Played cards score {C:chips}+#1#{} Chips',
-            [2] = 'per {C:attention}Steel Card{} in full deck',
-            [3] = '{C:inactive}(Currently: {C:chips}+#2# {C:inactive}Chips)'
-        }
-    },
-
 
     calculate = function(self, card, context)  
         if context.cardarea == G.play then
@@ -875,16 +760,6 @@ SMODS.Joker{
         return { vars = { card.ability.extra.chips, card.ability.extra.tarot_count, card.ability.extra.chips * card.ability.extra.tarot_count} }
     end,
 
-    loc_txt = {
-        name = 'Little Steven',
-        text = {
-            [1] = 'Played cards score {C:chips}+#1#{} Chips',
-            [2] = 'per {C:tarot}Tarot{} card used this ante',
-            [3] = '{C:inactive}(Currently: {C:chips}+#3# {C:inactive}Chips)'
-        }
-    },
-
-
     calculate = function(self, card, context)
         if context.using_consumeable and context.consumeable.ability.set == 'Tarot' then
             card.ability.extra.tarot_count = card.ability.extra.tarot_count + 1
@@ -933,15 +808,6 @@ SMODS.Joker{
         loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.activated, card.ability.extra.can_use, colours = {G.C.RED, G.C.FILTER}}}
     end,
-
-    loc_txt = {
-        name = 'The D6',
-        text = {
-            [1] = '{C:white,B:1}On Use:{} Rerolls the {C:attention}leftmost{} joker',
-            [2] = '{s:0.9,C:inactive}(Cannot reroll self)',
-            [3] = '{C:white,B:2}Recharge:{} After clearing ante'
-        }
-    },
 
     add_to_deck = function(self, card, from_debuff)
         card.ability.extra.can_use = true
@@ -1024,15 +890,6 @@ SMODS.Joker{
         return { vars = { card.ability.extra.chips} }
     end,
 
-    loc_txt = {
-        name = 'Guardian Angel',
-        text = {
-            [1] = 'Played cards score {C:chips}+#1#{} Chips',
-            [2] = 'per card {C:attention}held in hand',
-        }
-    },
-
-
     calculate = function(self, card, context)  
         if context.individual and context.cardarea == G.play then
             return {
@@ -1063,16 +920,6 @@ SMODS.Joker{
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.chips, card.ability.extra.destroyed_count, card.ability.extra.chips * card.ability.extra.destroyed_count} }
     end,
-
-    loc_txt = {
-        name = 'Demon Baby',
-        text = {
-            [1] = 'Played cards score {C:chips}+#1#{} Chips',
-            [2] = 'per card {C:attention}destroyed{} this ante',
-            [3] = '{C:inactive}(Currently: {C:chips}+#3# {C:inactive}Chips)'
-        }
-    },
-
 
     calculate = function(self, card, context)
 

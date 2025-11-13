@@ -48,15 +48,6 @@ SMODS.Joker{
         return { vars = { numerator, denominator, card.ability.extra.card_slots, card.ability.extra.pack_slots, card.ability.extra.restore_flag} }
     end,
 
-    loc_txt = {
-        name = "Guppy's Tail",
-        text = {
-            [1] = 'When entering shop, {C:green}#1# in #2#{} chance',
-            [2] = 'for {C:attention}-#3#{} card slot in shop and',
-            [3] = '{C:attention}+#4#{} Booster Pack slot in shop',
-        }
-    },
-
     remove_from_deck = function(self, card, from_debuff)
         if card.ability.restore_flag then
             change_shop_size(card.ability.extra.card_slots)
@@ -125,16 +116,6 @@ SMODS.Joker{
         info_queue[#info_queue+1] = G.P_CENTERS.m_hce_infested
     end,
 
-    loc_txt = {
-        name = 'Infestation',
-        text = {
-            [1] = 'If scoring hand contains',
-            [2] = 'an {C:attention}Infested Card{} another random',
-            [3] = 'scoring card becomes {C:attention}Infested'
-        }
-    },
-
-
     calculate = function(self, card, context)
         if context.before then
             local non_infesteds = {}
@@ -192,16 +173,6 @@ SMODS.Joker{
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult, card.ability.extra.chips } }
     end,
-
-    loc_txt = {
-        name = 'Mutant Spider',
-        text = {
-            [1] = 'This Joker gains {C:mult}+8{} Mult and {C:chips}+8{} Chips if',
-            [2] = 'played hand is a {C:attention}Four of a Kind{}',
-            [3] = '{C:inactive}(Currently {C:mult}+#1#{} {C:inactive}Mult and {C:chips}+#2#{} {C:inactive}Chips)',
-        }
-    },
-
 
     calculate = function(self, card, context)
         if context.before and context.scoring_hand and context.scoring_name == "Four of a Kind" then
@@ -261,16 +232,6 @@ SMODS.Joker{
         return { vars = { card.ability.extra.chips, card.ability.extra.spectral_count, card.ability.extra.chips * card.ability.extra.spectral_count} }
     end,
 
-    loc_txt = {
-        name = 'Ghost Baby',
-        text = {
-            [1] = 'Played cards score {C:chips}+#1#{} Chips',
-            [2] = 'per {C:spectral}Spectral{} card used this run',
-            [3] = '{C:inactive}(Currently: {C:chips}+#3# {C:inactive}Chips)'
-        }
-    },
-
-
     calculate = function(self, card, context)
         if context.using_consumeable and context.consumeable.ability.set == 'Spectral' then
             card.ability.extra.spectral_count = card.ability.extra.spectral_count + 1
@@ -308,14 +269,6 @@ SMODS.Joker{
         loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.activated, card.ability.extra.can_use, colours = {G.C.RED, G.C.FILTER}}}
     end,
-
-    loc_txt = {
-        name = 'D20',
-        text = {
-            [1] = '{C:white,B:1}On Use:{} Rerolls all held {C:attention}consumables',
-            [2] = '{C:white,B:2}Recharge:{} After clearing ante'
-        }
-    },
 
     add_to_deck = function(self, card, from_debuff)
         card.ability.extra.can_use = true
@@ -401,16 +354,6 @@ SMODS.Joker{
         return { vars = { card.ability.extra.chips, card.ability.extra.chips * joker_count} }
     end,
 
-    loc_txt = {
-        name = 'Harlequin Baby',
-        text = {
-            [1] = 'Played cards score {C:chips}+#1#{} Chips',
-            [2] = 'per {C:attention}Joker{} owned',
-            [3] = '{C:inactive}(Currently: {C:chips}+#2# {C:inactive}Chips)'
-        }
-    },
-
-
     calculate = function(self, card, context)  
         if context.individual and context.cardarea == G.play then
             return {
@@ -453,15 +396,6 @@ SMODS.Joker{
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.chips} }
     end,
-
-    loc_txt = {
-        name = 'Rainbow Baby',
-        text = {
-            [1] = 'Played cards score {C:chips}+#1#{} Chips',
-            [2] = 'per unique {C:attention}suit{} in scoring hand',
-        }
-    },
-
 
     calculate = function(self, card, context)
 
@@ -533,16 +467,6 @@ SMODS.Joker{
         info_queue[#info_queue + 1] = G.P_CENTERS.m_lucky
         return { vars = { card.ability.extra.chips, card.ability.extra.lucky_triggers, card.ability.extra.chips * card.ability.extra.lucky_triggers} }
     end,
-
-    loc_txt = {
-        name = 'Abel',
-        text = {
-            [1] = 'Played cards score {C:chips}+#1#{} Chips',
-            [2] = 'per card {C:attention}Lucky Card{} triggered this ante',
-            [3] = '{C:inactive}(Currently: {C:chips}+#3# {C:inactive}Chips)'
-        }
-    },
-
 
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.play and context.other_card.lucky_trigger then
