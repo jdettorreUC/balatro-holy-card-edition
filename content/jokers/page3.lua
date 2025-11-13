@@ -8,6 +8,42 @@ SMODS.Atlas{
 
 --ID 245 (20/20)
 
+SMODS.Joker{
+
+    key = '20_20',
+    atlas = 'HCE_Jokers3',
+    pos = {x= 0, y = 0},
+
+
+    rarity = 3,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 0 } },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.chips } }
+    end,
+
+    calculate = function(self, card, context)
+        if context.before and context.scoring_hand and context.scoring_name == "Pair" then
+            card.ability.extra.chips = card.ability.extra.chips + 20
+            return {
+                message = 'Upgrade!',
+                sound = 'hce_thumbs_up'
+            }
+        end
+
+        if context.joker_main then
+            return {
+                chips = card.ability.extra.chips
+            }
+        end
+    end
+}
+
 --ID 246 (Blue Map)
 
 --ID 247 (BFFS!)
@@ -33,6 +69,52 @@ SMODS.Atlas{
 --ID 257 (Fire Mind)
 
 --ID 258 (Missing No.)
+
+SMODS.Joker{
+
+    key = 'missing_no',
+    atlas = 'HCE_Jokers3',
+    pos = {x= 13, y = 0},
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+    perishable_compat = false,
+
+    add_to_deck = function(self, card, from_debuff)
+        card.ability.eternal = true
+    end,
+
+    calculate = function(self, card, context)
+        if context.setting_blind then
+            for i = 1, #G.jokers.cards do
+                if G.jokers.cards[i] ~= card then
+                    local rerolled_joker = G.jokers.cards[i]
+                    local edition = rerolled_joker.edition
+                    local apply_eternal = rerolled_joker.ability.eternal
+                    local apply_rental = rerolled_joker.ability.rental
+                    local apply_perishable = rerolled_joker.ability.perishable
+
+                    SMODS.Stickers["eternal"]:apply(rerolled_joker, false)
+                    SMODS.destroy_cards(rerolled_joker)
+                    local new_joker = SMODS.add_card {
+                        set = "Joker",
+                        edition = edition,
+                        no_edition = true,
+                    }
+
+                    SMODS.Stickers["eternal"]:apply(new_joker, apply_eternal)
+                    SMODS.Stickers["rental"]:apply(new_joker, apply_rental)
+                    SMODS.Stickers["perishable"]:apply(new_joker, apply_perishable)
+                end
+            end
+
+            card:juice_up()
+            play_sound('hce_thumbs_up')
+        end
+    end
+}
 
 --ID 259 (Dark Matter)
 
@@ -86,7 +168,128 @@ SMODS.Atlas{
 
 --ID 284 (D4)
 
+SMODS.Joker{
+
+    key = 'd4',
+    atlas = 'HCE_Jokers3',
+    pos = {x= 19, y = 1},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = false,
+
+    config = {extra = { activated = true, can_use = false} },
+
+        loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.activated, card.ability.extra.can_use, colours = {G.C.RED, G.C.FILTER}}}
+    end,
+
+    add_to_deck = function(self, card, from_debuff)
+        card.ability.extra.can_use = true
+        local eval = function(card) return card.ability.extra.can_use end
+        juice_card_until(card, eval, true)
+    end,
+
+    calculate = function(self, card, context)
+        if context.hce_using_joker and context.hce_joker_used == card then
+            for i = 1, #G.jokers.cards do
+                if G.jokers.cards[i] ~= card then
+                    local rerolled_joker = G.jokers.cards[i]
+                    local edition = rerolled_joker.edition
+                    local apply_eternal = rerolled_joker.ability.eternal
+                    local apply_rental = rerolled_joker.ability.rental
+                    local apply_perishable = rerolled_joker.ability.perishable
+
+                    SMODS.Stickers["eternal"]:apply(rerolled_joker, false)
+                    SMODS.destroy_cards(rerolled_joker)
+                    local new_joker = SMODS.add_card {
+                        set = "Joker",
+                        edition = edition,
+                        no_edition = true,
+                    }
+
+                    SMODS.Stickers["eternal"]:apply(new_joker, apply_eternal)
+                    SMODS.Stickers["rental"]:apply(new_joker, apply_rental)
+                    SMODS.Stickers["perishable"]:apply(new_joker, apply_perishable)
+                end
+            end
+
+            play_sound('hce_dice_roll')
+            card.ability.extra.can_use = false
+        end
+
+        if context.ante_change and context.ante_end then
+            if not card.ability.extra.can_use then
+                card.ability.extra.can_use = true
+                local eval = function(card) return card.ability.extra.can_use end
+                juice_card_until(card, eval, true)
+                return {
+                    message = "Charged!",
+                    sound = "hce_charge"
+                }
+            end
+        end
+    end
+}
+
 --ID 285 (D10)
+
+SMODS.Joker{
+
+    key = 'd10',
+    atlas = 'HCE_Jokers3',
+    pos = {x= 0, y = 2},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = false,
+
+    config = {extra = { activated = true, can_use = false} },
+
+        loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.activated, card.ability.extra.can_use, colours = {G.C.RED, G.C.FILTER}}}
+    end,
+
+    add_to_deck = function(self, card, from_debuff)
+        card.ability.extra.can_use = true
+        local eval = function(card) return card.ability.extra.can_use end
+        juice_card_until(card, eval, true)
+    end,
+
+    calculate = function(self, card, context)
+        if context.hce_using_joker and context.hce_joker_used == card then
+            --might need to ask for help with this, still can be activated if used while a pack is open or at the end of round eval screen, reverse emperor probably has the same problem, new context(s) maybe?
+            if G.GAME.blind.in_blind or G.STATE == G.STATES.SHOP then
+                return {
+                    message = localize('k_nope_ex'),
+                    sound = "hce_buzzer"
+                }
+            else
+                --so it doesn't spend money every time
+                G.from_boss_tag = true
+                G.FUNCS.reroll_boss()
+                play_sound('hce_dice_roll')
+                card.ability.extra.can_use = false
+            end
+        end
+
+        if context.ante_change and context.ante_end then
+            if not card.ability.extra.can_use then
+                card.ability.extra.can_use = true
+                local eval = function(card) return card.ability.extra.can_use end
+                juice_card_until(card, eval, true)
+                return {
+                    message = "Charged!",
+                    sound = "hce_charge"
+                }
+            end
+        end
+    end
+}
 
 --ID 286 (Blank Card)
 
@@ -107,6 +310,59 @@ SMODS.Atlas{
 --ID 294 (Butter Bean)
 
 --ID 295 (Magic Fingers)
+SMODS.Joker{
+
+    key = 'magic_fingers',
+    atlas = 'HCE_Jokers3',
+    pos = {x= 10, y = 2},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = false,
+
+    config = {extra = { activated = true, can_use = true, mult = 0, mult_mod = 5, use_cost = 3} },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.activated, card.ability.extra.can_use, card.ability.extra.mult, card.ability.extra.mult_mod, card.ability.extra.use_cost, colours = {G.C.RED, G.C.MONEY}}}
+    end,
+
+    calculate = function(self, card, context)
+        if context.hce_using_joker and context.hce_joker_used == card then
+            if G.GAME.dollars - card.ability.extra.use_cost < G.GAME.bankrupt_at then
+                return {
+                    message = localize('k_nope_ex'),
+                    sound = "hce_buzzer"
+                }
+            else
+                card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_mod
+
+                if not context.hce_from_car_battery then
+                    ease_dollars(-card.ability.extra.use_cost)
+                end
+
+                return {
+                    message = "Upgrade!",
+                    sound = "hce_thumbs_up"
+                }
+            end
+        end
+
+        if context.joker_main then
+            return {
+                mult = card.ability.extra.mult
+            }
+        end
+
+        if context.after and context.cardarea == G.jokers and card.ability.extra.mult > 0 then
+            card.ability.extra.mult = 0
+            return {
+                message = "Reset",
+            }
+        end
+    end
+}
 
 --ID 296 (Converter)
 
@@ -217,17 +473,23 @@ SMODS.Joker{
                 --does nothing until I add The Bible
             end
 
-            SMODS.destroy_cards(card, nil, nil, true)
+            
+
+            --this allows pandoras box to retrigger via car battery before being destroyed
+            if not next(SMODS.find_card("j_hce_car_battery")) or context.hce_from_car_battery then
+                SMODS.destroy_cards(card, nil, nil, true)
+            end
 
             if G.GAME.round_resets.blind_ante >= 9 then
                 return {
                     message = localize('k_nope_ex'),
                 }
+            else
+                play_sound("hce_thumbs_up")
             end
         end
 
         if context.ante_change then
-            --print("test")
             local desc_keys = {
                 [1] = "j_hce_pandoras_box_ante0",
                 [2] = "j_hce_pandoras_box_ante1",
@@ -373,10 +635,101 @@ SMODS.Joker{
 --ID 355 (Mom's Pearls)
 
 --ID 356 (Car Battery)
+SMODS.Joker{
+    key = 'car_battery',
+    atlas = 'HCE_Jokers3',
+    pos = {x= 11, y = 5},
+
+    rarity = 2,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+    calculate = function(self, card, context)
+        if context.hce_using_joker and not context.hce_from_car_battery then
+            local card_used = context.hce_joker_used
+
+            --locks button to prevent spam
+            local refund_use_flag = false
+            --a use_cost existing implies that there is no recharge (may need to change this later)
+            if card_used.ability.extra.use_cost then
+                card_used.ability.extra.can_use = false
+                refund_use_flag = true
+            end
+
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                func = function()
+                G.E_MANAGER:add_event(Event({
+                        trigger = 'after',
+                        delay = 0.5 * G.SETTINGS.GAMESPEED,
+                        func = function()
+                            attention_text({
+                                text = localize('k_again_ex'),
+                                scale = 0.7,
+                                hold = 1.4,
+                                major = card,
+                                backdrop_colour = G.C.FILTER,
+                                align = 'bm',
+                                silent = true
+                            })
+                            card:juice_up()
+                            play_sound('hce_charge')
+                            G.E_MANAGER:add_event(Event({
+                                    trigger = 'after',
+                                    delay = 0.5 * G.SETTINGS.GAMESPEED,
+                                    func = function ()
+                                        SMODS.calculate_context({hce_using_joker = true, hce_joker_used = card_used, hce_from_car_battery = true, area = card_used.from_area})
+                                        G.E_MANAGER:add_event(Event({
+                                            trigger = 'after',
+                                            delay = 0.5 * G.SETTINGS.GAMESPEED,
+                                            func = function ()
+                                                if refund_use_flag then
+                                                    card_used.ability.extra.can_use = true
+                                                end
+                                                return true
+                                            end
+                                        }))
+                                        return true
+                                    end
+                            }))
+                            return true
+                        end
+                    }))
+                    return true
+                end,
+            }))
+        end
+    end
+}
 
 --ID 357 (Box of Friends)
 
 --ID 358 (The Wiz)
+SMODS.Joker{
+    key = 'the_wiz',
+    atlas = 'HCE_Jokers3',
+    pos = {x= 13, y = 5},
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+    config = {extra = {to_draw = 3} },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.to_draw } }
+    end,
+
+    calculate = function(self, card, context)
+        if context.drawing_cards and (G.GAME.current_round.hands_played ~= 0 or G.GAME.current_round.discards_used ~= 0) then
+            return {
+                cards_to_draw = card.ability.extra.to_draw
+            }
+        end
+    end
+}
 
 --ID 359 (8 Inch Nails)
 

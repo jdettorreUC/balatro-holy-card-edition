@@ -273,6 +273,15 @@ return {
                     [4] = '{C:inactive}(Must have room)'
                 },
             },
+            j_hce_the_book_of_belial = {
+                name = 'The Book of Belial',
+                text = {
+                    [1] = '{C:white,B:1}On Use:{} This joker gains {C:white,X:mult}x#4#{} mult,',
+                    [2] = '{C:attention}resets{} after scoring',
+                    [3] = '{s:0.9,C:inactive}(Currently: {s:0.9,C:white,X:mult}x#3#{s:0.9,C:inactive} mult)',
+                    [4] = '{C:white,B:2}Recharge:{} At end of round'
+                },
+            },
             j_hce_the_poop = {
                 name = 'The Poop',
                 text = {
@@ -419,6 +428,45 @@ return {
                 },
             },
         --PAGE 3
+            j_hce_20_20 = {
+                name = '20/20',
+                text = {
+                    [1] = 'This Joker gains {C:chips}+20{} Chips if',
+                    [2] = 'played hand is a {C:attention}Pair{}',
+                    [3] = '{C:inactive}(Currently {C:chips}+#1#{} {C:inactive}Chips)',
+                },
+            },
+            j_hce_missing_no = {
+                name = 'Missing No.',
+                text = {
+                    [1] = "When entering a new blind, reroll",
+                    [2] = "{C:attention}all{} owned Jokers besides self",
+                    [3] = "Gains {C:attention}Eternal{} when acquired"
+                },
+            },
+            j_hce_d4 = {
+                name = 'D4',
+                text = {
+                    [1] = '{C:white,B:1}On Use:{} Rerolls {C:attention}all{} owned Jokers besides self',
+                    [2] = '{C:white,B:2}Recharge:{} After clearing ante'
+                },
+            },
+            j_hce_d10 = {
+                name = 'D10',
+                text = {
+                    [1] = '{C:white,B:1}On Use:{} Rerolls the {C:attention}Boss Blind',
+                    [2] = '{C:white,B:2}Recharge:{} After clearing ante'
+                },
+            },
+            j_hce_magic_fingers = {
+                name = 'Magic Fingers',
+                text = {
+                    [1] = '{C:white,B:1}On Use:{} This joker gains',
+                    [2] = '{C:mult}+#4#{} mult, {C:attention}resets{} after scoring',
+                    [3] = '{s:0.9,C:inactive}(Currently: {s:0.9,C:mult}+#3#{s:0.9,C:inactive} mult)',
+                    [4] = '{C:white,B:2}Cost Per Use:{} {C:money}$#5#'
+                },
+            },
             j_hce_pandoras_box = {
                 name = "Pandora's Box",
                 text = {
@@ -510,6 +558,19 @@ return {
                     [1] = "{C:white,B:1}On Use:{} {C:attention}Antes 9+:{} Does nothing.",
                     [2] = "{C:white,B:2}Single Use"
                 },
+            },
+            j_hce_car_battery = {
+                name = "Car Battery",
+                text = {
+                    [1] = "Activated Jokers {C:attention}retrigger{} when used"
+                }
+            },
+            j_hce_the_wiz = {
+                name = "The Wiz",
+                text = {
+                    [1] = "After {C:attention}Play{} or {C:attention}Discard{},",
+                    [2] = "always draw {C:attention}#1#{} cards"
+                }
             },
         },
     }

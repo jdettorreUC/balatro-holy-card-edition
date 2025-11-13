@@ -140,7 +140,6 @@ end
 --new context for when the use button is pressed on an activated joker, shown above
 G.FUNCS.use_joker = function(e)
     local card = e.config.ref_table
-    --print(card)
-    SMODS.calculate_context({hce_using_joker = true, hce_joker_used = card, area = card.from_area})
+    SMODS.calculate_context({hce_using_joker = true, hce_joker_used = card, hce_from_car_battery = false, area = card.from_area})
     return true
 end

@@ -296,6 +296,67 @@ SMODS.Joker{
 
 --ID 034 (The Book of Belial)
 
+SMODS.Joker{
+
+    key = 'the_book_of_belial',
+    atlas = 'HCE_Jokers',
+    pos = {x= 13, y = 1},
+
+
+    rarity = 2,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = false,
+
+    config = {extra = { activated = true, can_use = false, xmult = 1, xmult_mod = 2} },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.activated, card.ability.extra.can_use, card.ability.extra.xmult, card.ability.extra.xmult_mod, colours = {G.C.RED, G.C.FILTER}}}
+    end,
+
+    add_to_deck = function(self, card, from_debuff)
+        card.ability.extra.can_use = true
+        local eval = function(card) return card.ability.extra.can_use end
+        juice_card_until(card, eval, true)
+    end,
+
+    calculate = function(self, card, context)
+        if context.hce_using_joker and context.hce_joker_used == card then
+            card.ability.extra.xmult = card.ability.extra.xmult + card.ability.extra.xmult_mod
+            card.ability.extra.can_use = false
+            return {
+                message = "Upgrade!",
+                sound = "hce_woosh"
+            }
+        end
+
+        if context.end_of_round and context.cardarea == G.jokers then
+            if not card.ability.extra.can_use then
+                card.ability.extra.can_use = true
+                local eval = function(card) return card.ability.extra.can_use end
+                juice_card_until(card, eval, true)
+                return {
+                    message = "Charged!",
+                    sound = "hce_charge"
+                }
+            end
+        end
+
+        if context.joker_main then
+            return {
+                xmult = card.ability.extra.xmult
+            }
+        end
+
+        if context.after and context.cardarea == G.jokers and card.ability.extra.xmult > 1 then
+            card.ability.extra.xmult = 1
+            return {
+                message = "Reset",
+            }
+        end
+    end
+}
+
 --ID 035 (The Necronomicon)
 
 --ID 036 (The Poop)
@@ -350,13 +411,15 @@ SMODS.Joker{
         end
 
         if context.end_of_round and context.cardarea == G.jokers then
-            card.ability.extra.can_use = true
-            local eval = function(card) return card.ability.extra.can_use end
-            juice_card_until(card, eval, true)
-            return {
-                message = "Charged!",
-                sound = "hce_charge"
-            }
+            if not card.ability.extra.can_use then
+                card.ability.extra.can_use = true
+                local eval = function(card) return card.ability.extra.can_use end
+                juice_card_until(card, eval, true)
+                return {
+                    message = "Charged!",
+                    sound = "hce_charge"
+                }
+            end
         end
     end
 }
@@ -834,6 +897,7 @@ SMODS.Joker{
                 local new_joker = SMODS.add_card {
                     set = "Joker",
                     edition = edition,
+                    no_edition = true,
                 }
 
                 SMODS.Stickers["eternal"]:apply(new_joker, apply_eternal)
@@ -846,13 +910,15 @@ SMODS.Joker{
         end
 
         if context.ante_change and context.ante_end then
-            card.ability.extra.can_use = true
-            local eval = function(card) return card.ability.extra.can_use end
-            juice_card_until(card, eval, true)
-            return {
-                message = "Charged!",
-                sound = "hce_charge"
-            }
+            if not card.ability.extra.can_use then
+                card.ability.extra.can_use = true
+                local eval = function(card) return card.ability.extra.can_use end
+                juice_card_until(card, eval, true)
+                return {
+                    message = "Charged!",
+                    sound = "hce_charge"
+                }
+            end
         end
     end
 }

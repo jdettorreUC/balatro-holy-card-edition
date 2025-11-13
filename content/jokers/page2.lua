@@ -318,13 +318,15 @@ SMODS.Joker{
         end
 
         if context.ante_change and context.ante_end then
-            card.ability.extra.can_use = true
-            local eval = function(card) return card.ability.extra.can_use end
-            juice_card_until(card, eval, true)
-            return {
-                message = "Charged!",
-                sound = "hce_charge"
-            }
+            if not card.ability.extra.can_use then
+                card.ability.extra.can_use = true
+                local eval = function(card) return card.ability.extra.can_use end
+                juice_card_until(card, eval, true)
+                return {
+                    message = "Charged!",
+                    sound = "hce_charge"
+                }
+            end
         end
     end
 }
