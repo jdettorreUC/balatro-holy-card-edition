@@ -266,7 +266,7 @@ SMODS.Joker{
 
     config = {extra = { activated = true, can_use = false} },
 
-        loc_vars = function(self, info_queue, card)
+    loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.activated, card.ability.extra.can_use, colours = {G.C.RED, G.C.FILTER}}}
     end,
 
@@ -437,6 +437,38 @@ SMODS.Joker{
 --ID 181 (White Pony)
 
 --ID 182 (Sacred Heart)
+
+SMODS.Joker{
+
+    key = 'sacred_heart',
+    atlas = 'HCE_Jokers2',
+    pos = {x= 18, y = 2},
+
+
+    rarity = 3,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { xmult = 2, odds = 2} },
+
+    loc_vars = function(self, info_queue, card)
+        local numerator, denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'hce_sacred_heart')
+        return { vars = { card.ability.extra.xmult, numerator, denominator} }
+    end,
+
+    calculate = function(self, card, context)
+        if context.individual and context.cardarea == G.hand and not context.end_of_round and context.other_card:is_suit("Hearts") then
+            if SMODS.pseudorandom_probability(card, 'hce_sacred_heart', 1, card.ability.extra.odds) then
+                return {
+                    x_mult = card.ability.extra.xmult
+                }
+            end
+        end
+    end
+}
+
 
 --ID 183 (Tooth Picks)
 

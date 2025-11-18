@@ -190,24 +190,24 @@ return {
                 name = 'The Star?',
                 text = {
                     [1] = 'Converts up to {C:attention}3{}',
-                    [2] = 'selected {C:attention}Diamonds{} to',
-                    [3] = 'random non-{C:attention}Diamond{} suits',
+                    [2] = 'selected {C:diamonds}Diamonds{} to',
+                    [3] = 'random {C:attention}non-Diamond{} suits',
                 },
             },
             c_hce_reverse_moon = {
                 name = 'The Moon?',
                 text = {
                     [1] = 'Converts up to {C:attention}3{}',
-                    [2] = 'selected {C:attention}Clubs{} to',
-                    [3] = 'random non-{C:attention}Club{} suits',
+                    [2] = 'selected {C:clubs}Clubs{} to',
+                    [3] = 'random {C:attention}non-Club{} suits',
                 },
             },
             c_hce_reverse_sun = {
                 name = 'The Sun?',
                 text = {
                     [1] = 'Converts up to {C:attention}3{}',
-                    [2] = 'selected {C:attention}Hearts{} to',
-                    [3] = 'random non-{C:attention}Heart{} suits',
+                    [2] = 'selected {C:hearts}Hearts{} to',
+                    [3] = 'random {C:attention}non-Heart{} suits',
                 }
             },
             c_hce_reverse_judgement = {
@@ -221,8 +221,8 @@ return {
                 name = 'The World?',
                 text = {
                     [1] = 'Converts up to {C:attention}3{}',
-                    [2] = 'selected {C:attention}Spades{} to',
-                    [3] = 'random non-{C:attention}Spade{} suits',
+                    [2] = 'selected {C:spades}Spades{} to',
+                    [3] = 'random {C:attention}non-Spade{} suits',
                 },
             },
         },
@@ -273,6 +273,13 @@ return {
                     [4] = '{C:inactive}(Must have room)'
                 },
             },
+            j_hce_the_bible = {
+                name = 'The Bible',
+                text = {
+                    [1] = '{C:white,B:1}On Use:{} Gain {C:red}+#3#{} discards',
+                    [2] = '{C:white,B:2}Recharge:{} After clearing ante'
+                },
+            },
             j_hce_the_book_of_belial = {
                 name = 'The Book of Belial',
                 text = {
@@ -287,6 +294,22 @@ return {
                 text = {
                     [1] = '{C:white,B:1}On Use:{} Creates a random {C:attention}Soiled Card{} in hand',
                     [2] = '{C:white,B:2}Recharge:{} At end of round'
+                },
+            },
+            j_hce_yum_heart = {
+                name = 'Yum Heart',
+                text = {
+                    [1] = '{C:white,B:1}On Use:{} Converts a random {C:attention}non-Heart',
+                    [2] = 'card held in hand into a {C:hearts}Heart',
+                    [3] = '{C:white,B:2}Recharge:{} At end of round'
+                },
+            },
+            j_hce_lucky_foot = {
+                name = 'Lucky Foot',
+                text = {
+                    [1] = 'Increases all {C:attention}listed',
+                    [2] = '{C:green}probabilities{} by {C:attention}#1#',
+                    [3] = '{s:0.9,C:inactive}(You feel {s:0.9,C:green}lucky{s:0.9,C:inactive}...?)',
                 },
             },
             j_hce_sister_maggy = {
@@ -417,6 +440,14 @@ return {
                 text = {
                     [1] = 'Played cards score {C:chips}+#1#{} Chips',
                     [2] = 'per unique {C:attention}suit{} in scoring hand',
+                },
+            },
+            j_hce_sacred_heart = {
+                name = 'Sacred Heart',
+                text = {
+                    [1] = '{C:hearts}Hearts{} held in hand',
+                    [2] = 'have a {C:green}#2# in #3#{} chance',
+                    [3] = 'to give {X:mult,C:white}x#1#{} mult'
                 },
             },
             j_hce_abel = {

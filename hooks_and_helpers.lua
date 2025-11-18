@@ -63,6 +63,27 @@ function SMODS.calculate_context(context, return_table)
 
 end
 
+--increase edition and seal odds with lucky_foot
+local poll_edition_ref = poll_edition
+
+function poll_edition(_key, _mod, _no_neg, _guaranteed, _options)
+    if type(_mod) == "number" and G.STAGE == G.STAGES.RUN and next(SMODS.find_card("j_hce_lucky_foot")) then
+        _mod = _mod * 2
+    end
+
+    return poll_edition_ref(_key, _mod, _no_neg, _guaranteed, _options)
+end
+
+local poll_seal_ref = SMODS.poll_seal
+
+function SMODS.poll_seal(_key, _mod, _guaranteed, _options, _type_key)
+    if type(_mod) == "number" and G.STAGE == G.STAGES.RUN and next(SMODS.find_card("j_hce_lucky_foot")) then
+        _mod = _mod * 2
+    end
+
+    return poll_edition_ref(_key, _mod, _guaranteed, _options, _type_key)
+end
+
 --use button on activated jokers
 local G_UIDEF_use_and_sell_buttons_ref = G.UIDEF.use_and_sell_buttons
 

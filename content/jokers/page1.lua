@@ -293,6 +293,82 @@ SMODS.Joker{
 --ID 032 (Wire Coat Hanger)
 
 --ID 033 (The Bible)
+SMODS.Joker{
+
+    key = 'the_bible',
+    atlas = 'HCE_Jokers',
+    pos = {x= 12, y = 1},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = false,
+
+    config = {extra = { activated = true, can_use = false, discards = 2, reset_discards = 0} },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.activated, card.ability.extra.can_use, card.ability.extra.discards, card.ability.extra.reset_discards, colours = {G.C.RED, G.C.FILTER}}}
+    end,
+
+    add_to_deck = function(self, card, from_debuff)
+        card.ability.extra.can_use = true
+        local eval = function(card) return card.ability.extra.can_use end
+        juice_card_until(card, eval, true)
+    end,
+
+
+    remove_from_deck = function(self, card, from_debuff)
+        if card.ability.extra.reset_discards > 0 then
+            G.GAME.round_resets.discards = G.GAME.round_resets.discards - card.ability.extra.reset_discards
+            ease_discard(-card.ability.extra.reset_discards)
+        end
+    end,
+
+    calculate = function(self, card, context)
+        if context.hce_using_joker and context.hce_joker_used == card then
+            if not G.GAME.blind.in_blind then
+                return {
+                    message = localize('k_nope_ex'),
+                    sound = "hce_buzzer"
+                }
+            else
+                G.GAME.round_resets.discards = G.GAME.round_resets.discards + card.ability.extra.discards
+                ease_discard(card.ability.extra.discards)
+                card.ability.extra.reset_discards = card.ability.extra.reset_discards + card.ability.extra.discards
+
+                if G.GAME.round_resets.blind_ante == 8 and G.GAME.blind.boss.showdown and not context.hce_from_car_battery then
+                    G.GAME.blind:disable()
+                    card:juice_up()
+                    play_sound("hce_holy")
+                else
+                    card:juice_up()
+                    play_sound("hce_page_turn")
+                end
+
+                card.ability.extra.can_use = false
+            end
+        end
+
+        if context.end_of_round and card.ability.extra.reset_discards > 0 then
+            G.GAME.round_resets.discards = G.GAME.round_resets.discards - card.ability.extra.reset_discards
+            ease_discard(-card.ability.extra.reset_discards)
+            card.ability.extra.reset_discards = 0
+        end
+
+        if context.ante_change and context.ante_end then
+            if not card.ability.extra.can_use then
+                card.ability.extra.can_use = true
+                local eval = function(card) return card.ability.extra.can_use end
+                juice_card_until(card, eval, true)
+                return {
+                    message = "Charged!",
+                    sound = "hce_charge"
+                }
+            end
+        end
+    end
+}
 
 --ID 034 (The Book of Belial)
 
@@ -442,7 +518,149 @@ SMODS.Joker{
 
 --ID 045 (Yum Heart)
 
+SMODS.Joker{
+
+    key = 'yum_heart',
+    atlas = 'HCE_Jokers',
+    pos = {x= 3, y = 2},
+
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = false,
+
+    config = {extra = { activated = true, can_use = false} },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.activated, card.ability.extra.can_use, colours = {G.C.RED, G.C.FILTER}}}
+    end,
+
+    add_to_deck = function(self, card, from_debuff)
+        card.ability.extra.can_use = true
+        local eval = function(card) return card.ability.extra.can_use end
+        juice_card_until(card, eval, true)
+    end,
+
+    calculate = function(self, card, context)
+        if context.hce_using_joker and context.hce_joker_used == card then
+            if #G.hand.cards < 1 then
+                return {
+                    message = localize('k_nope_ex'),
+                    sound = "hce_buzzer"
+                }
+            else
+                local non_hearts = {}
+                for _, v in pairs(G.hand.cards) do
+                    if not v:is_suit("Hearts") then
+                        non_hearts[#non_hearts+1] = v
+                    end
+                end
+
+                if #non_hearts == 0 then
+                    return {
+                        message = localize('k_nope_ex'),
+                        sound = "hce_buzzer"
+                    }
+                else
+                    local new_heart = pseudorandom_element(non_hearts, "hce_yum_heart")
+
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'after',
+                        delay = 0.15,
+                        func = function()
+                            new_heart:flip()
+                            play_sound('card1')
+                            new_heart:juice_up(0.3, 0.3)
+                            return true
+                        end
+                    }))                
+                    delay(0.2)
+
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'after',
+                        delay = 0.1,
+                        func = function()
+                            SMODS.change_base(new_heart, "Hearts")
+                            play_sound('hce_thumbs_up')
+                            return true
+                        end
+                    }))
+
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'after',
+                        delay = 0.15,
+                        func = function()
+                            new_heart:flip()
+                            play_sound('tarot2')
+                            new_heart:juice_up(0.3, 0.3)
+                            return true
+                        end
+                    }))
+
+
+                    card.ability.extra.can_use = false
+                end
+            end
+        end
+
+        if context.end_of_round and context.cardarea == G.jokers then
+            if not card.ability.extra.can_use then
+                card.ability.extra.can_use = true
+                local eval = function(card) return card.ability.extra.can_use end
+                juice_card_until(card, eval, true)
+                return {
+                    message = "Charged!",
+                    sound = "hce_charge"
+                }
+            end
+        end
+    end
+}
+
 --ID 046 (Lucky Foot)
+
+SMODS.Joker{
+
+    key = 'lucky_foot',
+    atlas = 'HCE_Jokers',
+    pos = {x= 4, y = 2},
+
+
+    rarity = 2,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { odds_boost = 1 } },
+
+    loc_vars = function(self, info_queue, card)
+        return { vars = { card.ability.extra.odds_boost } }
+    end,
+
+    add_to_deck = function(self, card, from_debuff)
+        G.GAME.edition_rate = G.GAME.edition_rate + card.ability.extra.odds_boost
+    end,
+
+    remove_from_deck = function(self, card, from_debuff)
+        G.GAME.edition_rate = G.GAME.edition_rate - card.ability.extra.odds_boost
+    end,
+
+    calculate = function(self, card, context)  
+        if context.mod_probability then
+            return {
+                numerator = context.numerator + card.ability.extra.odds_boost
+            }
+        end
+
+        if context.buying_card then
+            if context.card.key == 'v_hone' or context.card.key == 'v_glow_up' then
+                G.GAME.edition_rate = G.GAME.edition_rate + card.ability.extra.odds_boost
+            end
+        end
+    end
+}
 
 --ID 047 (Doctor's Remote)
 

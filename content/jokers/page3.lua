@@ -428,8 +428,8 @@ SMODS.Joker{
                     SMODS.add_card{ set = "Planet" }
                 end
             elseif G.GAME.round_resets.blind_ante == 3 then
-                --this is >= because it accounts for the slot that will be freed when pandoras box is consumed
-                if G.jokers.config.card_limit - #G.jokers.cards >= 0 then
+                --accounts for the joker slot that will be freed from pandora's box being consumed without giving an extra joker due to car battery
+                if G.jokers.config.card_limit - #G.jokers.cards > 0 or (G.jokers.config.card_limit - #G.jokers.cards == 0 and not context.hce_from_car_battery) then
                     local rand_edition = poll_edition("hce_pandoras_box", nil, false, true)
                     SMODS.add_card {
                         set = "Joker",
@@ -438,7 +438,7 @@ SMODS.Joker{
                     }
                 end
             elseif G.GAME.round_resets.blind_ante == 4 then
-                if G.jokers.config.card_limit - #G.jokers.cards >= 0 then
+                if G.jokers.config.card_limit - #G.jokers.cards > 0 or (G.jokers.config.card_limit - #G.jokers.cards == 0 and not context.hce_from_car_battery) then
                     local rand_edition = poll_edition("hce_pandoras_box", nil, false, true)
                     SMODS.add_card {
                         set = "Joker",
@@ -460,7 +460,7 @@ SMODS.Joker{
                 ease_dollars(20, true)
             elseif G.GAME.round_resets.blind_ante == 7 then
                 for i = 1, 2 do
-                    if G.jokers.config.card_limit - #G.jokers.cards >= 0 then
+                    if G.jokers.config.card_limit - #G.jokers.cards > 0 or (G.jokers.config.card_limit - #G.jokers.cards == 0 and not context.hce_from_car_battery) then
                         local rand_edition = poll_edition("hce_pandoras_box", nil, false, true)
                         SMODS.add_card {
                             set = "Joker",
@@ -470,10 +470,10 @@ SMODS.Joker{
                     end
                 end
             elseif G.GAME.round_resets.blind_ante == 8 then
-                --does nothing until I add The Bible
+                if G.jokers.config.card_limit - #G.jokers.cards > 0 or (G.jokers.config.card_limit - #G.jokers.cards == 0 and not context.hce_from_car_battery) then
+                    SMODS.add_card{key = "j_hce_the_bible"}
+                end
             end
-
-            
 
             --this allows pandoras box to retrigger via car battery before being destroyed
             if not next(SMODS.find_card("j_hce_car_battery")) or context.hce_from_car_battery then
