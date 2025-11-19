@@ -154,26 +154,31 @@ SMODS.Consumable {
     end,
 
     use = function(self, card, area, copier)
-        local not_selected = {}
-        local numb_discarded = 0
-        for _, playing_card in ipairs(G.hand.cards) do
-            not_selected[#not_selected + 1] = playing_card
-        end
-        for i = 1, 3 do
-            if G.hand.cards[i] then
-                local selected_card, card_index = pseudorandom_element(not_selected, 'hce_reverse_magician')
-                G.hand:add_to_highlighted(selected_card, true)
-                table.remove(not_selected, card_index)
-                numb_discarded = numb_discarded + 1
-                play_sound('card1', 1)
+
+        if area == G.pack_cards and G.consumeables.config.card_limit - #G.consumeables.cards > 0 then
+            SMODS.add_card{ key = "c_hce_reverse_magician" }
+        else
+            local not_selected = {}
+            local numb_discarded = 0
+            for _, playing_card in ipairs(G.hand.cards) do
+                not_selected[#not_selected + 1] = playing_card
             end
-        end
+            for i = 1, 3 do
+                if G.hand.cards[i] then
+                    local selected_card, card_index = pseudorandom_element(not_selected, 'hce_reverse_magician')
+                    G.hand:add_to_highlighted(selected_card, true)
+                    table.remove(not_selected, card_index)
+                    numb_discarded = numb_discarded + 1
+                    play_sound('card1', 1)
+                end
+            end
 
-        G.FUNCS.discard_cards_from_highlighted(nil, true)
-        SMODS.draw_cards(numb_discarded)
+            G.FUNCS.discard_cards_from_highlighted(nil, true)
+            SMODS.draw_cards(numb_discarded)
 
-        if G.STATE == G.STATES.SMODS_BOOSTER_OPENED then
-            G.FUNCS.draw_from_discard_to_deck()
+            if G.STATE == G.STATES.SMODS_BOOSTER_OPENED then
+                G.FUNCS.draw_from_discard_to_deck()
+            end
         end
 
         return true
@@ -340,7 +345,11 @@ SMODS.Consumable {
     end,
 
     can_use = function(self, card)
-        return G.GAME.blind_on_deck ~= "Boss" and not G.GAME.blind.in_blind and G.STATE ~= G.STATES.SHOP and not G.GAME.hce_reverse_emperor_used
+        if not G.blind_select then
+            return false
+        else
+            return G.GAME.blind_on_deck ~= "Boss" and not G.GAME.hce_reverse_emperor_used
+        end
     end,
 
     use = function(self, card, area, copier)
@@ -602,7 +611,7 @@ SMODS.Consumable {
 
 }
 
---The Wheel of Fortune? - 1/20 chance to add Gilded or Negative edition to a random Joker
+--The Wheel of Fortune? - 1/13 chance to add Gilded or Negative edition to a random Joker
 
 SMODS.Consumable {
     key = 'reverse_wheel',
@@ -613,7 +622,7 @@ SMODS.Consumable {
     cost = 3,
     pos = {x = 9, y = 1},
 
-    config = { extra = {odds = 20} },
+    config = { extra = {odds = 13} },
     loc_vars = function(self, info_queue, card)
         -- SMODS.get_probability_vars(trigger_obj, base_numerator, base_denominator, key, from_roll)
         local numerator, denominator = SMODS.get_probability_vars(card, 1, card.ability.extra.odds, 'hce_reverse_wheel')

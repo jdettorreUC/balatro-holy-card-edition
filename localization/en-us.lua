@@ -65,6 +65,7 @@ return {
                 text = {
                     [1] = 'Discards {C:attention}#1#{} random cards in hand',
                     [2] = 'without spending a {C:attention}Discard',
+                    [3] = '{s:0.9,C:inactive}(Gives a copy when used in pack)',
                 },
             },
             c_hce_reverse_high_priestess = {
@@ -277,7 +278,8 @@ return {
                 name = 'The Bible',
                 text = {
                     [1] = '{C:white,B:1}On Use:{} Gain {C:red}+#3#{} discards',
-                    [2] = '{C:white,B:2}Recharge:{} After clearing ante'
+                    [2] = 'for the current blind',
+                    [3] = '{C:white,B:2}Recharge:{} After clearing ante'
                 },
             },
             j_hce_the_book_of_belial = {

@@ -1110,8 +1110,7 @@ SMODS.Joker{
                 local apply_rental = rerolled_joker.ability.rental
                 local apply_perishable = rerolled_joker.ability.perishable
 
-                SMODS.Stickers["eternal"]:apply(rerolled_joker, false)
-                SMODS.destroy_cards(rerolled_joker)
+                SMODS.destroy_cards(rerolled_joker, true, true)
                 local new_joker = SMODS.add_card {
                     set = "Joker",
                     edition = edition,

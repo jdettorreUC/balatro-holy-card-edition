@@ -294,7 +294,7 @@ SMODS.Joker{
                     end
                 end
 
-                SMODS.destroy_cards(G.consumeables.cards)
+                SMODS.destroy_cards(G.consumeables.cards, true, true)
 
                 while (#edition_queue > 0) do
                     local random_pool = nil
