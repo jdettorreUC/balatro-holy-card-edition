@@ -646,18 +646,6 @@ SMODS.Joker{
     calculate = function(self, card, context)
         if context.hce_using_joker and not context.hce_from_car_battery then
             local card_used = context.hce_joker_used
-            local car_batteries_to_left = 0
-
-            for i = 1, #G.jokers.cards do
-                if G.jokers.cards[i] == card then
-                    break
-                elseif G.jokers.cards[i].config.center.key == "j_hce_car_battery" then
-                    car_batteries_to_left = car_batteries_to_left + 1
-                end
-            end
-
-            --local battery_buffer = 5 * car_batteries_to_left
-            local battery_buffer = 0
 
             --locks button to prevent spam
             local refund_use_flag = false
@@ -687,7 +675,7 @@ SMODS.Joker{
                             play_sound('hce_charge')
                             G.E_MANAGER:add_event(Event({
                                     trigger = 'after',
-                                    delay = 0.5 * G.SETTINGS.GAMESPEED + battery_buffer,
+                                    delay = 0.5 * G.SETTINGS.GAMESPEED,
                                     func = function ()
                                         SMODS.calculate_context({hce_using_joker = true, hce_joker_used = card_used, hce_from_car_battery = true, area = card_used.from_area})
                                         G.E_MANAGER:add_event(Event({
