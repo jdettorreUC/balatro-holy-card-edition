@@ -68,6 +68,41 @@ SMODS.Joker{
 
 --ID 257 (Fire Mind)
 
+SMODS.Joker{
+
+    key = 'fire_mind',
+    atlas = 'HCE_Jokers3',
+    pos = {x= 12, y = 0},
+
+    rarity = 1,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+    calculate = function(self, card, context)
+        if context.after then
+            if SMODS.last_hand_oneshot then
+                local empty_slots = G.consumeables.config.card_limit - #G.consumeables.cards
+                
+                for i = 1, empty_slots do
+                    SMODS.add_card{ set = "Tarot" }
+                end
+
+                if empty_slots > 0 then
+                    play_sound("hce_thumbs_up")
+                    card:juice_up()
+                end
+            else
+                SMODS.debuff_card(card, true, "hce_fire_mind")
+                return {
+                    message = "Debuffed",
+                    sound = "hce_thumbs_down"
+                }
+            end
+        end
+    end
+}
+
 --ID 258 (Missing No.)
 
 SMODS.Joker{
@@ -129,6 +164,53 @@ SMODS.Joker{
 --ID 264 (Smart Fly)
 
 --ID 265 (Dry Baby)
+
+SMODS.Joker{
+
+    key = 'dry_baby',
+    atlas = 'HCE_Jokers3',
+    pos = {x= 0, y = 1},
+
+
+    rarity = 2,
+    cost = 4,
+    unlocked = true,
+    blueprint_compat = true,
+
+
+    config = {extra = { chips = 2, scored_bones = 0 } },
+
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue + 1] = G.P_CENTERS.m_hce_bone
+        return { vars = { card.ability.extra.chips, card.ability.extra.scored_bones, card.ability.extra.chips * card.ability.extra.scored_bones} }
+    end,
+
+    calculate = function(self, card, context)
+
+        if context.remove_playing_cards and not context.selling_card then
+            for i = 1, #context.removed do
+                if SMODS.has_enhancement(context.removed[i], "m_hce_bone") then
+                    card.ability.extra.scored_bones = 0
+                    return {
+                        message = "Reset",
+                        sound = "hce_thumbs_down"
+                    }
+                end
+            end
+        end
+
+        if context.individual and context.cardarea == G.play then
+            if SMODS.has_enhancement(context.other_card, "m_hce_bone") then
+                card.ability.extra.scored_bones = card.ability.extra.scored_bones + 1
+            end
+
+            return {
+                chips = card.ability.extra.chips * card.ability.extra.scored_bones,
+                card = card
+            }
+        end
+    end
+}
 
 --ID 266 (Juicy Sack)
 

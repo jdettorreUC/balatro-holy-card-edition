@@ -62,50 +62,50 @@ SMODS.Enhancement {
 }
 
 --Charged (for battery related items) - Card increases rank after scoring, permanently gains x0.25 mult when “fully charged” (Ace into 2)
-SMODS.Enhancement {
-    key = 'charged',
-    atlas = 'HCE_enhancements',
-    pos = {x = 1, y = 1},
+-- SMODS.Enhancement {
+--     key = 'charged',
+--     atlas = 'HCE_enhancements',
+--     pos = {x = 1, y = 1},
 
-    config = {extra = { charge_rate = 1} },
-    loc_vars = function(self, info_queue, card)
-        return { vars = { card.ability.extra.charge_rate } }
-    end,
+--     config = {extra = { charge_rate = 1} },
+--     loc_vars = function(self, info_queue, card)
+--         return { vars = { card.ability.extra.charge_rate } }
+--     end,
 
-    calculate = function(self, card, context)
-        if context.final_scoring_step and context.cardarea == G.play then
-            G.E_MANAGER:add_event(Event({
-                trigger = 'after',
-                delay = 0.15,
-                func = function()
-                    local charge_flag = false
-                    if card:get_id() + card.ability.extra.charge_rate > 14 then
-                        card.ability.perma_x_mult = card.ability.perma_x_mult + 0.25
-                        charge_flag = true
-                    end
-                    SMODS.modify_rank(card, card.ability.extra.charge_rate)
-                    card:juice_up()
+--     calculate = function(self, card, context)
+--         if context.final_scoring_step and context.cardarea == G.play then
+--             G.E_MANAGER:add_event(Event({
+--                 trigger = 'after',
+--                 delay = 0.15,
+--                 func = function()
+--                     local charge_flag = false
+--                     if card:get_id() + card.ability.extra.charge_rate > 14 then
+--                         card.ability.perma_x_mult = card.ability.perma_x_mult + 0.25
+--                         charge_flag = true
+--                     end
+--                     SMODS.modify_rank(card, card.ability.extra.charge_rate)
+--                     card:juice_up()
 
-                    if charge_flag then
-                        attention_text({
-                            text = 'Charged!',
-                            scale = 1,
-                            hold = 1.4,
-                            major = card,
-                            align = 'bm',
-                            offset = { x = 0, y = 0 },
-                            silent = true
-                        })
-                        play_sound('hce_charge')
-                    else
-                        play_sound('hce_thumbs_up')
-                    end
-                    return true
-                end
-            }))
-        end
-    end,
-}
+--                     if charge_flag then
+--                         attention_text({
+--                             text = 'Charged!',
+--                             scale = 1,
+--                             hold = 1.4,
+--                             major = card,
+--                             align = 'bm',
+--                             offset = { x = 0, y = 0 },
+--                             silent = true
+--                         })
+--                         play_sound('hce_charge')
+--                     else
+--                         play_sound('hce_thumbs_up')
+--                     end
+--                     return true
+--                 end
+--             }))
+--         end
+--     end,
+-- }
 
 --Explosive (for bomb related items) - Destroy self when scored, permanently adds its chips to adjacent scoring cards
 SMODS.Enhancement {

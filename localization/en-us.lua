@@ -16,21 +16,21 @@ return {
                     [2] = 'earn {C:money}$#1#{} when discarded',
                 },
             },
-            m_hce_charged = {
-                name = 'Charged Card',
-                text = {
-                    [1] = 'Increase rank by {C:attention}#1#{} after',
-                    [2] = 'scoring, permanently gains',
-                    [3] = '{X:mult,C:white}X0.25{} mult when rank resets',
-                    [4] = '{C:inactive}({C:attention}Ace {C:inactive}into {C:attention}2{C:inactive})'
-                },
-            },
+            -- m_hce_charged = {
+            --     name = 'Charged Card',
+            --     text = {
+            --         [1] = 'Increase rank by {C:attention}#1#{} after',
+            --         [2] = 'scoring, permanently gains',
+            --         [3] = '{X:mult,C:white}X0.25{} mult when rank resets',
+            --         [4] = '{C:inactive}({C:attention}Ace {C:inactive}into {C:attention}2{C:inactive})'
+            --     },
+            -- },
             m_hce_explosive = {
                 name = 'Explosive Card',
                 text = {
-                    [1] = '{C:attention}Explodes{} after scoring, permanently',
-                    [2] = 'adding total chips to {C:attention}adjacent{}',
-                    [3] = 'scoring cards in hand',
+                    [1] = '{C:attention}Explodes{} after scoring,',
+                    [2] = 'permanently adding total {C:chips}Chips{} to',
+                    [3] = '{C:attention}adjacent{} scoring cards',
                 },
             },
             m_hce_bone = {
@@ -469,12 +469,29 @@ return {
                     [3] = '{C:inactive}(Currently {C:chips}+#1#{} {C:inactive}Chips)',
                 },
             },
+            j_hce_fire_mind = {
+                name = 'Fire Mind',
+                text = {
+                    [1] = "If score is on {C:attention}fire{}, fill empty",
+                    [2] = "consumable slots with random {C:tarot}Tarot{} cards",
+                    [3] = "{C:attention}debuffs{} self if score is not on fire"
+                },
+            },
             j_hce_missing_no = {
                 name = 'Missing No.',
                 text = {
                     [1] = "When entering a new blind, reroll",
                     [2] = "{C:attention}all{} owned Jokers besides self",
                     [3] = "Gains {C:attention}Eternal{} when acquired"
+                },
+            },
+            j_hce_dry_baby = {
+                name = 'Dry Baby',
+                text = {
+                    [1] = 'Played cards score {C:chips}+#1#{} Chips',
+                    [2] = 'per card {C:attention}Bone Card{} scored, {C:attention}resets{}',
+                    [3] = 'if a {C:attention}Bone Card{} is destroyed',
+                    [4] = '{C:inactive}(Currently: {C:chips}+#3# {C:inactive}Chips)'
                 },
             },
             j_hce_d4 = {
