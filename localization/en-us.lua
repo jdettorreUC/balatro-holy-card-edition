@@ -227,6 +227,77 @@ return {
                 },
             },
         },
+        Pills = {
+            c_hce_infested_pill_question = {
+                name = 'Infested?',
+                text = {
+                    [1] = "Each card held in hand has a",
+                    [2] = "{C:green}#1# in #2#{} chance to be enhanced",
+                    [3] = "into an {C:attention}Infested Card"
+                },
+            },
+            c_hce_infested_pill_exclamation = {
+                name = 'Infested!',
+                text = {
+                    [1] = "Enhances {C:attention}#1#{} random",
+                    [2] = "{C:attention}non-enhanced{} cards held",
+                    [3] = "in hand into {C:attention}Infested Cards"
+                },
+            },
+            c_hce_bombs_are_key = {
+                name = 'Bombs Are Key',
+                text = {
+                    [1] = "Swaps all {C:attention}light{} suits",
+                    [2] = "and {C:attention}dark{} suits held in hand",
+                    [3] = "{s:0.8}({s:0.8,C:hearts}Hearts {s:0.8}<-> {s:0.8,C:diamonds}Diamonds {s:0.8}and {s:0.8,C:spades}Spades {s:0.8}<-> {s:0.8,C:clubs}Clubs{s:0.8})"
+                },
+            },
+            c_hce_re_lax = {
+                name = 'Re-Lax',
+                text = {
+                    [1] = "Enhances {C:attention}#1#{} random",
+                    [2] = "{C:attention}non-enhanced{} cards held",
+                    [3] = "in hand into {C:attention}Soiled Cards"
+                },
+            },
+            c_hce_x_lax = {
+                name = 'X-Lax',
+                text = {
+                    [1] = "Each card held in hand has a",
+                    [2] = "{C:green}#1# in #2#{} chance to be enhanced",
+                    [3] = "into a {C:attention}Soiled Card"
+                },
+            },
+            c_hce_one_makes_you_larger = {
+                name = 'One Makes You Larger',
+                text = {
+                    [1] = 'Increases the rank of',
+                    [2] = '{C:attention}all{} cards held',
+                    [3] = 'in hand by {C:attention}1',
+                },
+            },
+            c_hce_one_makes_you_small = {
+                name = 'One Makes You Small',
+                text = {
+                    [1] = 'Decreases the rank of',
+                    [2] = '{C:attention}all{} cards held',
+                    [3] = 'in hand by {C:attention}1',
+                },
+            },
+            c_hce_experimental_pill = {
+                name = 'Experimental Pill',
+                text = {
+                    [1] = 'Increases or decreases the',
+                    [2] = 'level of each poker hand by {C:attention}1',
+                },
+            },
+            c_hce_i_found_pills = {
+                name = 'I Found Pills',
+                text = {
+                    [1] = "This is a test."
+                },
+            },
+        },
         Joker = {
         --PAGE 1
             j_hce_sad_onion = {
